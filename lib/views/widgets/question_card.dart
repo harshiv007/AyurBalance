@@ -19,7 +19,7 @@ class QuestionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       elevation: AppConstants.cardElevation,
       margin: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -47,9 +47,9 @@ class QuestionCard extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: AppConstants.defaultPadding),
-            
+
             // Question text
             Text(
               question.text,
@@ -60,25 +60,31 @@ class QuestionCard extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-            
+
             const SizedBox(height: AppConstants.largePadding),
-            
+
             // Answer options
-            ...question.options.map((option) => _buildOptionTile(
-              context,
-              option,
-              selectedOptionId == option.id,
-            )),
+            ...question.options.map(
+              (option) => _buildOptionTile(
+                context,
+                option,
+                selectedOptionId == option.id,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOptionTile(BuildContext context, QuestionOption option, bool isSelected) {
+  Widget _buildOptionTile(
+    BuildContext context,
+    QuestionOption option,
+    bool isSelected,
+  ) {
     final theme = Theme.of(context);
     final doshaColor = AppTheme.getDoshaColor(option.primaryDosha);
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: AppConstants.smallPadding),
       child: Material(
@@ -92,13 +98,13 @@ class QuestionCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
               border: Border.all(
-                color: isSelected 
-                    ? doshaColor 
+                color: isSelected
+                    ? doshaColor
                     : theme.colorScheme.outline.withValues(alpha: 0.3),
                 width: isSelected ? 2.0 : 1.0,
               ),
-              color: isSelected 
-                  ? doshaColor.withValues(alpha: 0.1) 
+              color: isSelected
+                  ? doshaColor.withValues(alpha: 0.1)
                   : Colors.transparent,
             ),
             child: Row(
@@ -111,7 +117,9 @@ class QuestionCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isSelected ? doshaColor : theme.colorScheme.outline,
+                      color: isSelected
+                          ? doshaColor
+                          : theme.colorScheme.outline,
                       width: 2.0,
                     ),
                     color: isSelected ? doshaColor : Colors.transparent,
@@ -124,24 +132,26 @@ class QuestionCard extends StatelessWidget {
                         )
                       : null,
                 ),
-                
+
                 const SizedBox(width: AppConstants.defaultPadding),
-                
+
                 // Option text
                 Expanded(
                   child: Text(
                     option.text,
                     style: TextStyle(
                       fontSize: AppConstants.bodyTextSize,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                      color: isSelected 
-                          ? doshaColor 
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                      color: isSelected
+                          ? doshaColor
                           : theme.colorScheme.onSurface,
                       height: 1.3,
                     ),
                   ),
                 ),
-                
+
                 // Dosha indicator dot
                 Container(
                   width: 8,

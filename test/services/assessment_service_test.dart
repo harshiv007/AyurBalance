@@ -62,7 +62,7 @@ void main() {
       test('should have unique option IDs across all questions', () {
         final questions = service.getQuestions();
         final allOptionIds = <String>[];
-        
+
         for (final question in questions) {
           for (final option in question.options) {
             allOptionIds.add(option.id);
@@ -78,8 +78,10 @@ void main() {
 
         for (final question in questions) {
           expect(question.options.length, equals(3));
-          
-          final doshaTypes = question.options.map((o) => o.primaryDosha).toSet();
+
+          final doshaTypes = question.options
+              .map((o) => o.primaryDosha)
+              .toSet();
           expect(doshaTypes, contains(DoshaType.vata));
           expect(doshaTypes, contains(DoshaType.pitta));
           expect(doshaTypes, contains(DoshaType.kapha));
@@ -91,11 +93,12 @@ void main() {
       test('should calculate result with valid answers', () {
         final questions = service.getQuestions();
         final answers = <String, String>{};
-        
+
         // Answer all questions with vata options
         for (final question in questions) {
-          final vataOption = question.options
-              .firstWhere((option) => option.primaryDosha == DoshaType.vata);
+          final vataOption = question.options.firstWhere(
+            (option) => option.primaryDosha == DoshaType.vata,
+          );
           answers[question.id] = vataOption.id;
         }
 
@@ -114,7 +117,7 @@ void main() {
       test('should handle mixed answers correctly', () {
         final questions = service.getQuestions();
         final answers = <String, String>{};
-        
+
         // Answer with mixed dosha options
         for (int i = 0; i < questions.length; i++) {
           final question = questions[i];
@@ -144,7 +147,7 @@ void main() {
       test('should include selected traits for all categories', () {
         final questions = service.getQuestions();
         final answers = <String, String>{};
-        
+
         // Answer one question from each category
         final categorizedQuestions = <QuestionCategory, Question>{};
         for (final question in questions) {
@@ -161,28 +164,61 @@ void main() {
         final result = service.calculateResult(answers);
 
         expect(result.selectedTraits.keys, hasLength(4));
-        expect(result.selectedTraits[QuestionCategory.physicalTraits], isNotEmpty);
-        expect(result.selectedTraits[QuestionCategory.mentalEmotional], isNotEmpty);
-        expect(result.selectedTraits[QuestionCategory.habitsPreferences], isNotEmpty);
-        expect(result.selectedTraits[QuestionCategory.environmentalReactions], isNotEmpty);
+        expect(
+          result.selectedTraits[QuestionCategory.physicalTraits],
+          isNotEmpty,
+        );
+        expect(
+          result.selectedTraits[QuestionCategory.mentalEmotional],
+          isNotEmpty,
+        );
+        expect(
+          result.selectedTraits[QuestionCategory.habitsPreferences],
+          isNotEmpty,
+        );
+        expect(
+          result.selectedTraits[QuestionCategory.environmentalReactions],
+          isNotEmpty,
+        );
       });
     });
 
     group('generateRecommendations', () {
       test('should generate vata recommendations', () {
-        final recommendations = service.generateRecommendations(PrakritiType.vata);
+        final recommendations = service.generateRecommendations(
+          PrakritiType.vata,
+        );
 
         expect(recommendations, hasLength(5));
         expect(recommendations.map((r) => r.type).toSet(), hasLength(5));
-        expect(recommendations.any((r) => r.type == RecommendationType.diet), isTrue);
-        expect(recommendations.any((r) => r.type == RecommendationType.lifestyle), isTrue);
-        expect(recommendations.any((r) => r.type == RecommendationType.sleep), isTrue);
-        expect(recommendations.any((r) => r.type == RecommendationType.stressManagement), isTrue);
-        expect(recommendations.any((r) => r.type == RecommendationType.seasonal), isTrue);
+        expect(
+          recommendations.any((r) => r.type == RecommendationType.diet),
+          isTrue,
+        );
+        expect(
+          recommendations.any((r) => r.type == RecommendationType.lifestyle),
+          isTrue,
+        );
+        expect(
+          recommendations.any((r) => r.type == RecommendationType.sleep),
+          isTrue,
+        );
+        expect(
+          recommendations.any(
+            (r) => r.type == RecommendationType.stressManagement,
+          ),
+          isTrue,
+        );
+        expect(
+          recommendations.any((r) => r.type == RecommendationType.seasonal),
+          isTrue,
+        );
       });
 
       test('should generate pitta recommendations', () {
-        final recommendations = service.generateRecommendations(PrakritiType.pitta);
+        final recommendations = service.generateRecommendations(
+          PrakritiType.pitta,
+        );
 
         expect(recommendations, hasLength(5));
         expect(recommendations.every((r) => r.title.isNotEmpty), isTrue);
@@ -191,16 +227,24 @@ void main() {
       });
 
       test('should generate kapha recommendations', () {
-        final recommendations = service.generateRecommendations(PrakritiType.kapha);
+        final recommendations = service.generateRecommendations(
+          PrakritiType.kapha,
+        );
 
         expect(recommendations, hasLength(5));
         expect(recommendations.map((r) => r.type).toSet(), hasLength(5));
       });
 
       test('should generate dual dosha recommendations', () {
-        final vataPittaRecs = service.generateRecommendations(PrakritiType.vataPitta);
-        final pittaKaphaRecs = service.generateRecommendations(PrakritiType.pittaKapha);
-        final vataKaphaRecs = service.generateRecommendations(PrakritiType.vataKapha);
+        final vataPittaRecs = service.generateRecommendations(
+          PrakritiType.vataPitta,
+        );
+        final pittaKaphaRecs = service.generateRecommendations(
+          PrakritiType.pittaKapha,
+        );
+        final vataKaphaRecs = service.generateRecommendations(
+          PrakritiType.vataKapha,
+        );
 
         expect(vataPittaRecs, hasLength(5));
         expect(pittaKaphaRecs, hasLength(5));
@@ -208,29 +252,42 @@ void main() {
       });
 
       test('should generate tridoshic recommendations', () {
-        final recommendations = service.generateRecommendations(PrakritiType.tridoshic);
+        final recommendations = service.generateRecommendations(
+          PrakritiType.tridoshic,
+        );
 
         expect(recommendations, hasLength(5));
         expect(recommendations.map((r) => r.type).toSet(), hasLength(5));
       });
 
-      test('should have different recommendations for different prakriti types', () {
-        final vataRecs = service.generateRecommendations(PrakritiType.vata);
-        final pittaRecs = service.generateRecommendations(PrakritiType.pitta);
-        final kaphaRecs = service.generateRecommendations(PrakritiType.kapha);
+      test(
+        'should have different recommendations for different prakriti types',
+        () {
+          final vataRecs = service.generateRecommendations(PrakritiType.vata);
+          final pittaRecs = service.generateRecommendations(PrakritiType.pitta);
+          final kaphaRecs = service.generateRecommendations(PrakritiType.kapha);
 
-        // Check that diet recommendations are different
-        final vataDiet = vataRecs.firstWhere((r) => r.type == RecommendationType.diet);
-        final pittaDiet = pittaRecs.firstWhere((r) => r.type == RecommendationType.diet);
-        final kaphaDiet = kaphaRecs.firstWhere((r) => r.type == RecommendationType.diet);
+          // Check that diet recommendations are different
+          final vataDiet = vataRecs.firstWhere(
+            (r) => r.type == RecommendationType.diet,
+          );
+          final pittaDiet = pittaRecs.firstWhere(
+            (r) => r.type == RecommendationType.diet,
+          );
+          final kaphaDiet = kaphaRecs.firstWhere(
+            (r) => r.type == RecommendationType.diet,
+          );
 
-        expect(vataDiet.title, isNot(equals(pittaDiet.title)));
-        expect(pittaDiet.title, isNot(equals(kaphaDiet.title)));
-        expect(vataDiet.title, isNot(equals(kaphaDiet.title)));
-      });
+          expect(vataDiet.title, isNot(equals(pittaDiet.title)));
+          expect(pittaDiet.title, isNot(equals(kaphaDiet.title)));
+          expect(vataDiet.title, isNot(equals(kaphaDiet.title)));
+        },
+      );
 
       test('should include practical suggestions in all recommendations', () {
-        final recommendations = service.generateRecommendations(PrakritiType.vata);
+        final recommendations = service.generateRecommendations(
+          PrakritiType.vata,
+        );
 
         for (final recommendation in recommendations) {
           expect(recommendation.suggestions, isNotEmpty);

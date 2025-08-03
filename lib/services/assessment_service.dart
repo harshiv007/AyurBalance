@@ -11,22 +11,21 @@ class AssessmentService {
   final DoshaCalculator _doshaCalculator;
 
   /// Constructor with dependency injection
-  AssessmentService({
-    DoshaCalculator? doshaCalculator,
-  }) : _doshaCalculator = doshaCalculator ?? DoshaCalculator();
+  AssessmentService({DoshaCalculator? doshaCalculator})
+    : _doshaCalculator = doshaCalculator ?? DoshaCalculator();
 
   /// Returns the complete list of assessment questions covering all four categories.
   List<Question> getQuestions() {
     return [
       // Physical Traits Questions (12 questions)
       ..._getPhysicalTraitsQuestions(),
-      
+
       // Mental & Emotional Questions (10 questions)
       ..._getMentalEmotionalQuestions(),
-      
+
       // Habits & Preferences Questions (12 questions)
       ..._getHabitsPreferencesQuestions(),
-      
+
       // Environmental Reactions Questions (8 questions)
       ..._getEnvironmentalReactionsQuestions(),
     ];
@@ -35,9 +34,15 @@ class AssessmentService {
   /// Calculates the complete assessment result based on user answers.
   AssessmentResult calculateResult(Map<String, String> answers) {
     final questions = getQuestions();
-    final doshaScores = _doshaCalculator.calculateDoshaScores(answers, questions);
+    final doshaScores = _doshaCalculator.calculateDoshaScores(
+      answers,
+      questions,
+    );
     final prakritiType = _doshaCalculator.determinePrakritiType(doshaScores);
-    final selectedTraits = _doshaCalculator.extractSelectedTraits(answers, questions);
+    final selectedTraits = _doshaCalculator.extractSelectedTraits(
+      answers,
+      questions,
+    );
     final recommendations = generateRecommendations(prakritiType);
 
     return AssessmentResult(
@@ -374,8 +379,9 @@ class AssessmentService {
         ],
       ),
     ];
-  }  
-// Mental & Emotional Questions
+  }
+
+  // Mental & Emotional Questions
   List<Question> _getMentalEmotionalQuestions() {
     return [
       Question(
@@ -1150,7 +1156,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.diet,
         title: 'Vata-Balancing Diet',
-        description: 'Warm, nourishing foods to ground and stabilize your airy nature.',
+        description:
+            'Warm, nourishing foods to ground and stabilize your airy nature.',
         suggestions: [
           'Eat warm, cooked foods rather than cold or raw',
           'Include healthy fats like ghee, olive oil, and avocados',
@@ -1163,7 +1170,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.lifestyle,
         title: 'Vata-Balancing Lifestyle',
-        description: 'Create routine and stability to calm your restless energy.',
+        description:
+            'Create routine and stability to calm your restless energy.',
         suggestions: [
           'Establish regular daily routines for meals, sleep, and activities',
           'Practice gentle, grounding exercises like yoga or tai chi',
@@ -1233,7 +1241,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.lifestyle,
         title: 'Pitta-Balancing Lifestyle',
-        description: 'Moderate activities to channel your intense energy wisely.',
+        description:
+            'Moderate activities to channel your intense energy wisely.',
         suggestions: [
           'Avoid overworking and schedule regular breaks',
           'Practice moderate exercise, avoid overheating',
@@ -1329,7 +1338,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.stressManagement,
         title: 'Kapha Stress Management',
-        description: 'Stimulating practices to overcome lethargy and attachment.',
+        description:
+            'Stimulating practices to overcome lethargy and attachment.',
         suggestions: [
           'Practice energizing breathing exercises',
           'Engage in vigorous physical activity when feeling down',
@@ -1360,7 +1370,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.diet,
         title: 'Vata-Pitta Balancing Diet',
-        description: 'Moderate, nourishing foods that are neither too heating nor too cooling.',
+        description:
+            'Moderate, nourishing foods that are neither too heating nor too cooling.',
         suggestions: [
           'Eat regular, moderate meals at consistent times',
           'Choose foods that are neither too hot nor too cold',
@@ -1373,7 +1384,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.lifestyle,
         title: 'Vata-Pitta Lifestyle Balance',
-        description: 'Structured yet flexible routines to balance both energies.',
+        description:
+            'Structured yet flexible routines to balance both energies.',
         suggestions: [
           'Create structured routines but allow for some flexibility',
           'Practice moderate exercise - not too intense, not too gentle',
@@ -1412,7 +1424,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.seasonal,
         title: 'Vata-Pitta Seasonal Adaptation',
-        description: 'Adjust routine based on which dosha is more aggravated by season.',
+        description:
+            'Adjust routine based on which dosha is more aggravated by season.',
         suggestions: [
           'Follow Vata guidelines during fall and winter',
           'Follow Pitta guidelines during summer',
@@ -1430,7 +1443,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.diet,
         title: 'Pitta-Kapha Balancing Diet',
-        description: 'Light, moderately spiced foods that are neither too heating nor too heavy.',
+        description:
+            'Light, moderately spiced foods that are neither too heating nor too heavy.',
         suggestions: [
           'Eat light, warm foods with moderate spicing',
           'Choose bitter, pungent, and astringent tastes',
@@ -1456,7 +1470,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.sleep,
         title: 'Pitta-Kapha Sleep Balance',
-        description: 'Moderate sleep duration with cool, comfortable environment.',
+        description:
+            'Moderate sleep duration with cool, comfortable environment.',
         suggestions: [
           'Aim for 7-8 hours of sleep',
           'Keep bedroom cool but not cold',
@@ -1513,7 +1528,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.lifestyle,
         title: 'Vata-Kapha Lifestyle Balance',
-        description: 'Gentle yet consistent activities to balance both energies.',
+        description:
+            'Gentle yet consistent activities to balance both energies.',
         suggestions: [
           'Create gentle but consistent daily routines',
           'Practice moderate exercise - yoga, walking, or swimming',
@@ -1526,7 +1542,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.sleep,
         title: 'Vata-Kapha Sleep Balance',
-        description: 'Consistent sleep routine with warm, comfortable environment.',
+        description:
+            'Consistent sleep routine with warm, comfortable environment.',
         suggestions: [
           'Maintain consistent bedtime around 9:30-10 PM',
           'Keep bedroom warm and comfortable',
@@ -1539,7 +1556,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.stressManagement,
         title: 'Vata-Kapha Stress Balance',
-        description: 'Grounding practices that also provide gentle stimulation.',
+        description:
+            'Grounding practices that also provide gentle stimulation.',
         suggestions: [
           'Practice gentle, rhythmic breathing exercises',
           'Engage in moderate, enjoyable physical activities',
@@ -1570,7 +1588,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.diet,
         title: 'Tridoshic Balancing Diet',
-        description: 'Balanced, seasonal eating to maintain equilibrium of all doshas.',
+        description:
+            'Balanced, seasonal eating to maintain equilibrium of all doshas.',
         suggestions: [
           'Eat according to the season and your current state',
           'Include all six tastes in your meals',
@@ -1583,7 +1602,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.lifestyle,
         title: 'Tridoshic Lifestyle Balance',
-        description: 'Flexible lifestyle that adapts to maintain overall balance.',
+        description:
+            'Flexible lifestyle that adapts to maintain overall balance.',
         suggestions: [
           'Maintain flexible routines that can adapt to your needs',
           'Practice varied forms of exercise',
@@ -1596,7 +1616,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.sleep,
         title: 'Tridoshic Sleep Balance',
-        description: 'Consistent sleep routine that adapts to your current needs.',
+        description:
+            'Consistent sleep routine that adapts to your current needs.',
         suggestions: [
           'Maintain consistent sleep schedule around 10 PM',
           'Adjust bedroom environment based on current needs',
@@ -1609,7 +1630,8 @@ class AssessmentService {
       Recommendation(
         type: RecommendationType.stressManagement,
         title: 'Tridoshic Stress Balance',
-        description: 'Varied stress management techniques for different situations.',
+        description:
+            'Varied stress management techniques for different situations.',
         suggestions: [
           'Use different stress management techniques as needed',
           'Practice various forms of meditation and breathing',

@@ -11,11 +11,15 @@ import 'views/screens/assessment_screen.dart';
 import 'views/screens/results_screen.dart';
 import 'views/screens/history_screen.dart';
 import 'views/widgets/main_navigation.dart';
+
 import 'models/assessment_result.dart';
 
 void main() {
   runApp(
-    DevicePreview(enabled: true, builder: (context) => const AyurvedicPrakritiApp()),
+    DevicePreview(
+      enabled: true,
+      builder: (context) => const AyurvedicPrakritiApp(),
+    ),
   );
 }
 
@@ -38,18 +42,20 @@ class AyurvedicPrakritiApp extends StatelessWidget {
             title: AppConstants.appName,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            themeMode: themeViewModel.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            themeMode: themeViewModel.isDarkMode
+                ? ThemeMode.dark
+                : ThemeMode.light,
             debugShowCheckedModeBanner: false,
-            
-            // Navigation configuration
-            navigatorKey: NavigationService.navigatorKey,
-            initialRoute: AppRoutes.welcome,
-            routes: _buildRoutes(),
-            onGenerateRoute: _onGenerateRoute,
-            
-            // Navigation behavior
-            navigatorObservers: [AppNavigatorObserver()],
-          );
+
+              // Navigation configuration
+              navigatorKey: NavigationService.navigatorKey,
+              initialRoute: AppRoutes.welcome,
+              routes: _buildRoutes(),
+              onGenerateRoute: _onGenerateRoute,
+
+              // Navigation behavior
+              navigatorObservers: [AppNavigatorObserver()],
+            );
         },
       ),
     );
@@ -64,9 +70,8 @@ class AyurvedicPrakritiApp extends StatelessWidget {
         final initialIndex = args is int ? args : 0;
         return MainNavigation(initialIndex: initialIndex);
       },
-      AppRoutes.assessment: (context) => const BackButtonHandler(
-        child: AssessmentScreen(),
-      ),
+      AppRoutes.assessment: (context) =>
+          const BackButtonHandler(child: AssessmentScreen()),
       AppRoutes.history: (context) => const HistoryScreen(),
     };
   }
@@ -78,9 +83,8 @@ class AyurvedicPrakritiApp extends StatelessWidget {
         final args = settings.arguments;
         if (args is AssessmentResult) {
           return MaterialPageRoute(
-            builder: (context) => BackButtonHandler(
-              child: ResultsScreen(result: args),
-            ),
+            builder: (context) =>
+                BackButtonHandler(child: ResultsScreen(result: args)),
             settings: settings,
           );
         }
@@ -89,7 +93,7 @@ class AyurvedicPrakritiApp extends StatelessWidget {
           builder: (context) => const WelcomeScreen(),
           settings: const RouteSettings(name: AppRoutes.welcome),
         );
-      
+
       default:
         // Unknown route, redirect to welcome
         return MaterialPageRoute(
@@ -104,10 +108,7 @@ class AyurvedicPrakritiApp extends StatelessWidget {
 class BackButtonHandler extends StatelessWidget {
   final Widget child;
 
-  const BackButtonHandler({
-    super.key,
-    required this.child,
-  });
+  const BackButtonHandler({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -115,10 +116,13 @@ class BackButtonHandler extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
-        
+
         final currentRoute = ModalRoute.of(context)?.settings.name;
         if (currentRoute != null) {
-          final shouldPop = await NavigationService.handleBackButton(context, currentRoute);
+          final shouldPop = await NavigationService.handleBackButton(
+            context,
+            currentRoute,
+          );
           if (shouldPop && context.mounted) {
             Navigator.of(context).pop();
           }
@@ -149,7 +153,11 @@ class AppNavigatorObserver extends NavigatorObserver {
     _logNavigation('REPLACE', newRoute, oldRoute);
   }
 
-  void _logNavigation(String action, Route<dynamic>? route, Route<dynamic>? previousRoute) {
+  void _logNavigation(
+    String action,
+    Route<dynamic>? route,
+    Route<dynamic>? previousRoute,
+  ) {
     if (route?.settings.name != null) {
       debugPrint('Navigation $action: ${route?.settings.name}');
     }

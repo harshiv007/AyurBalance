@@ -10,27 +10,27 @@ class StorageService {
   Future<void> saveAssessmentResult(AssessmentResult result) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Get existing results
       final existingResults = await getAssessmentHistory();
-      
+
       // Add or update the result
       final updatedResults = [...existingResults];
       final existingIndex = updatedResults.indexWhere((r) => r.id == result.id);
-      
+
       if (existingIndex >= 0) {
         updatedResults[existingIndex] = result;
       } else {
         updatedResults.add(result);
       }
-      
+
       // Sort by timestamp (newest first)
       updatedResults.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
+
       // Convert to JSON and save
       final jsonList = updatedResults.map((result) => result.toJson()).toList();
       final jsonString = jsonEncode(jsonList);
-      
+
       await prefs.setString(_assessmentResultsKey, jsonString);
     } catch (e) {
       throw StorageException('Failed to save assessment result: $e');
@@ -42,14 +42,16 @@ class StorageService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final jsonString = prefs.getString(_assessmentResultsKey);
-      
+
       if (jsonString == null || jsonString.isEmpty) {
         return [];
       }
-      
+
       final jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList
-          .map((json) => AssessmentResult.fromJson(json as Map<String, dynamic>))
+          .map(
+            (json) => AssessmentResult.fromJson(json as Map<String, dynamic>),
+          )
           .toList();
     } catch (e) {
       throw StorageException('Failed to load assessment history: $e');
@@ -71,14 +73,16 @@ class StorageService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final existingResults = await getAssessmentHistory();
-      
+
       // Remove the result with the specified ID
-      final updatedResults = existingResults.where((result) => result.id != id).toList();
-      
+      final updatedResults = existingResults
+          .where((result) => result.id != id)
+          .toList();
+
       // Save the updated list
       final jsonList = updatedResults.map((result) => result.toJson()).toList();
       final jsonString = jsonEncode(jsonList);
-      
+
       await prefs.setString(_assessmentResultsKey, jsonString);
     } catch (e) {
       throw StorageException('Failed to delete assessment result: $e');
@@ -132,11 +136,11 @@ class StorageService {
       final prefs = await SharedPreferences.getInstance();
       const testKey = 'storage_test';
       const testValue = 'test';
-      
+
       await prefs.setString(testKey, testValue);
       final retrievedValue = prefs.getString(testKey);
       await prefs.remove(testKey);
-      
+
       return retrievedValue == testValue;
     } catch (e) {
       return false;
@@ -147,9 +151,9 @@ class StorageService {
 /// Custom exception for storage-related errors
 class StorageException implements Exception {
   final String message;
-  
+
   const StorageException(this.message);
-  
+
   @override
   String toString() => 'StorageException: $message';
 }

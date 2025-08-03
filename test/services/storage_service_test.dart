@@ -25,7 +25,9 @@ void main() {
         await storageService.saveAssessmentResult(result);
 
         // Retrieve the result
-        final retrievedResult = await storageService.getAssessmentResult(result.id);
+        final retrievedResult = await storageService.getAssessmentResult(
+          result.id,
+        );
 
         // Verify the result was saved and retrieved correctly
         expect(retrievedResult, isNotNull);
@@ -33,7 +35,10 @@ void main() {
         expect(retrievedResult.prakritiType, equals(result.prakritiType));
         expect(retrievedResult.doshaScores, equals(result.doshaScores));
         expect(retrievedResult.selectedTraits, equals(result.selectedTraits));
-        expect(retrievedResult.recommendations.length, equals(result.recommendations.length));
+        expect(
+          retrievedResult.recommendations.length,
+          equals(result.recommendations.length),
+        );
       });
 
       test('should return empty list when no results exist', () async {
@@ -42,7 +47,9 @@ void main() {
       });
 
       test('should return null when result ID does not exist', () async {
-        final result = await storageService.getAssessmentResult('non-existent-id');
+        final result = await storageService.getAssessmentResult(
+          'non-existent-id',
+        );
         expect(result, isNull);
       });
 
@@ -115,10 +122,14 @@ void main() {
       test('should get correct assessment count', () async {
         expect(await storageService.getAssessmentCount(), equals(0));
 
-        await storageService.saveAssessmentResult(_createTestAssessmentResult(id: 'result1'));
+        await storageService.saveAssessmentResult(
+          _createTestAssessmentResult(id: 'result1'),
+        );
         expect(await storageService.getAssessmentCount(), equals(1));
 
-        await storageService.saveAssessmentResult(_createTestAssessmentResult(id: 'result2'));
+        await storageService.saveAssessmentResult(
+          _createTestAssessmentResult(id: 'result2'),
+        );
         expect(await storageService.getAssessmentCount(), equals(2));
 
         await storageService.deleteAssessmentResult('result1');
@@ -144,7 +155,9 @@ void main() {
     group('Data Management', () {
       test('should clear all data', () async {
         // Add some data
-        await storageService.saveAssessmentResult(_createTestAssessmentResult());
+        await storageService.saveAssessmentResult(
+          _createTestAssessmentResult(),
+        );
         await storageService.saveThemePreference(true);
 
         // Verify data exists
@@ -169,7 +182,10 @@ void main() {
       test('should handle JSON serialization errors gracefully', () async {
         // This test would require mocking SharedPreferences to throw errors
         // For now, we'll just verify the exception types exist
-        expect(() => throw const StorageException('Test error'), throwsA(isA<StorageException>()));
+        expect(
+          () => throw const StorageException('Test error'),
+          throwsA(isA<StorageException>()),
+        );
       });
     });
   });
@@ -194,7 +210,10 @@ AssessmentResult _createTestAssessmentResult({
       QuestionCategory.physicalTraits: ['Dry skin', 'Thin build'],
       QuestionCategory.mentalEmotional: ['Quick thinking', 'Restless'],
       QuestionCategory.habitsPreferences: ['Light sleep', 'Variable appetite'],
-      QuestionCategory.environmentalReactions: ['Prefers warmth', 'Anxious under stress'],
+      QuestionCategory.environmentalReactions: [
+        'Prefers warmth',
+        'Anxious under stress',
+      ],
     },
     recommendations: [
       const Recommendation(

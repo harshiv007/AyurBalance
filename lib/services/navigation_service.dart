@@ -3,7 +3,8 @@ import '../models/assessment_result.dart';
 
 /// Service for handling app navigation and back button behavior
 class NavigationService {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   /// Get the current context
   static BuildContext? get currentContext => navigatorKey.currentContext;
@@ -64,22 +65,25 @@ class NavigationService {
   }
 
   /// Handle back button press with custom logic
-  static Future<bool> handleBackButton(BuildContext context, String currentRoute) async {
+  static Future<bool> handleBackButton(
+    BuildContext context,
+    String currentRoute,
+  ) async {
     switch (currentRoute) {
       case AppRoutes.assessment:
         // Show confirmation dialog for assessment
         return await _showAssessmentExitDialog(context) ?? false;
-      
+
       case AppRoutes.results:
         // Go back to main navigation instead of previous screen
         navigateToMainNavigation();
         return true; // Prevent default back behavior
-      
+
       case AppRoutes.welcome:
       case AppRoutes.mainNavigation:
         // Allow system to handle (exit app)
         return false;
-      
+
       default:
         // Default back behavior
         return false;

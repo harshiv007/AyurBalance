@@ -7,6 +7,7 @@ import '../../utils/constants.dart';
 import '../../utils/theme.dart';
 import '../../models/dosha.dart';
 import '../widgets/dosha_avatar.dart';
+import '../widgets/theme_transition.dart';
 
 /// Welcome screen that introduces the app and Ayurvedic prakriti concept
 class WelcomeScreen extends StatelessWidget {
@@ -14,7 +15,6 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -24,37 +24,37 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               // Header with theme toggle
               _buildHeader(context),
-              
+
               const SizedBox(height: AppConstants.largePadding),
-              
+
               // App logo/icon
               _buildAppIcon(context),
-              
+
               const SizedBox(height: AppConstants.largePadding),
-              
+
               // Welcome title
               _buildWelcomeTitle(context),
-              
+
               const SizedBox(height: AppConstants.defaultPadding),
-              
+
               // App description
               _buildAppDescription(context),
-              
+
               const SizedBox(height: AppConstants.largePadding),
-              
+
               // Dosha overview
               _buildDoshaOverview(context),
-              
+
               const SizedBox(height: AppConstants.largePadding),
-              
+
               // Prakriti explanation
               _buildPrakritiExplanation(context),
-              
+
               SizedBox(height: AppConstants.largePadding + 8),
-              
+
               // Start assessment button
               _buildStartButton(context),
-              
+
               const SizedBox(height: AppConstants.defaultPadding),
             ],
           ),
@@ -76,21 +76,14 @@ class WelcomeScreen extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        
+
         // Theme toggle button
         Consumer<ThemeViewModel>(
           builder: (context, themeViewModel, child) {
-            return IconButton(
-              onPressed: () => context.themeViewModel.toggleTheme(),
-              icon: Icon(
-                themeViewModel.isDarkMode 
-                    ? Icons.light_mode 
-                    : Icons.dark_mode,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-              tooltip: themeViewModel.isDarkMode 
-                  ? 'Switch to Light Mode' 
-                  : 'Switch to Dark Mode',
+            return AnimatedThemeToggle(
+              isDarkMode: themeViewModel.isDarkMode,
+              onToggle: () => context.themeViewModel.toggleTheme(),
+              size: 24.0,
             );
           },
         ),
@@ -100,7 +93,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _buildAppIcon(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       width: 120,
       height: 120,
@@ -122,17 +115,13 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(
-        Icons.spa,
-        size: 60,
-        color: theme.colorScheme.onPrimary,
-      ),
+      child: Icon(Icons.spa, size: 60, color: theme.colorScheme.onPrimary),
     );
   }
 
   Widget _buildWelcomeTitle(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       children: [
         Text(
@@ -159,7 +148,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _buildAppDescription(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Text(
       'Discover your unique Ayurvedic constitution (Prakriti) through a comprehensive assessment. '
       'Understanding your dosha balance helps you make informed choices about diet, lifestyle, '
@@ -175,7 +164,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _buildDoshaOverview(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       children: [
         Text(
@@ -186,49 +175,68 @@ class WelcomeScreen extends StatelessWidget {
             color: theme.colorScheme.onSurface,
           ),
         ),
-        
+
         const SizedBox(height: AppConstants.defaultPadding),
-        
+
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildDoshaPreview(context, 'Vata', 'Air & Space', AppTheme.vataColor),
-            _buildDoshaPreview(context, 'Pitta', 'Fire & Water', AppTheme.pittaColor),
-            _buildDoshaPreview(context, 'Kapha', 'Earth & Water', AppTheme.kaphaColor),
+            _buildDoshaPreview(
+              context,
+              'Vata',
+              'Air & Space',
+              AppTheme.vataColor,
+            ),
+            _buildDoshaPreview(
+              context,
+              'Pitta',
+              'Fire & Water',
+              AppTheme.pittaColor,
+            ),
+            _buildDoshaPreview(
+              context,
+              'Kapha',
+              'Earth & Water',
+              AppTheme.kaphaColor,
+            ),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildDoshaPreview(BuildContext context, String name, String elements, Color color) {
+  Widget _buildDoshaPreview(
+    BuildContext context,
+    String name,
+    String elements,
+    Color color,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: AppConstants.smallPadding),
+        margin: const EdgeInsets.symmetric(
+          horizontal: AppConstants.smallPadding,
+        ),
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           color: color.withValues(alpha: 0.1),
-          border: Border.all(
-            color: color.withValues(alpha: 0.3),
-            width: 1,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
         ),
         child: Column(
           children: [
             DoshaAvatar(
-              doshaType: name.toLowerCase() == 'vata' 
-                  ? DoshaType.vata 
-                  : name.toLowerCase() == 'pitta' 
-                      ? DoshaType.pitta 
-                      : DoshaType.kapha,
+              doshaType: name.toLowerCase() == 'vata'
+                  ? DoshaType.vata
+                  : name.toLowerCase() == 'pitta'
+                  ? DoshaType.pitta
+                  : DoshaType.kapha,
               size: DoshaAvatarSize.small,
             ),
-            
+
             const SizedBox(height: AppConstants.smallPadding),
-            
+
             Text(
               name,
               style: TextStyle(
@@ -237,9 +245,9 @@ class WelcomeScreen extends StatelessWidget {
                 color: color,
               ),
             ),
-            
+
             const SizedBox(height: 2),
-            
+
             Text(
               elements,
               style: TextStyle(
@@ -256,7 +264,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _buildPrakritiExplanation(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
       decoration: BoxDecoration(
@@ -287,9 +295,9 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: AppConstants.smallPadding),
-          
+
           Text(
             'Prakriti is your unique Ayurvedic constitution determined at birth. It represents the '
             'natural balance of the three doshas (Vata, Pitta, Kapha) in your body and mind. '
@@ -311,7 +319,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _buildStartButton(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return SizedBox(
       width: double.infinity,
       height: 56,

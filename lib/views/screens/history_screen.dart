@@ -17,7 +17,7 @@ class HistoryScreen extends StatefulWidget {
   State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> 
+class _HistoryScreenState extends State<HistoryScreen>
     with ViewModelLifecycleMixin {
   bool _isInitialized = false;
 
@@ -46,7 +46,7 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AppBar(
       title: Text(
         'Assessment History',
@@ -64,7 +64,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             if (!_isInitialized || !viewModel.hasHistory) {
               return const SizedBox.shrink();
             }
-            
+
             return PopupMenuButton<String>(
               onSelected: (value) => _handleMenuAction(context, value),
               itemBuilder: (context) => [
@@ -117,7 +117,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             children: [
               // History summary
               _buildHistorySummary(context, viewModel),
-              
+
               // Results list
               Expanded(
                 child: ListView.builder(
@@ -136,10 +136,13 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  Widget _buildHistorySummary(BuildContext context, ResultsViewModel viewModel) {
+  Widget _buildHistorySummary(
+    BuildContext context,
+    ResultsViewModel viewModel,
+  ) {
     final theme = Theme.of(context);
     final stats = viewModel.getHistoryStatistics();
-    
+
     return Container(
       margin: const EdgeInsets.all(AppConstants.defaultPadding),
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -162,7 +165,8 @@ class _HistoryScreenState extends State<HistoryScreen>
           _buildStatItem(
             context,
             'Most Common',
-            (stats['mostCommonPrakriti'] as PrakritiType?)?.displayName ?? 'N/A',
+            (stats['mostCommonPrakriti'] as PrakritiType?)?.displayName ??
+                'N/A',
             Icons.trending_up,
           ),
           _buildStatItem(
@@ -176,16 +180,17 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  Widget _buildStatItem(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildStatItem(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Column(
       children: [
-        Icon(
-          icon,
-          color: theme.colorScheme.primary,
-          size: 24,
-        ),
+        Icon(icon, color: theme.colorScheme.primary, size: 24),
         const SizedBox(height: 4),
         Text(
           value,
@@ -206,9 +211,13 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  Widget _buildHistoryItem(BuildContext context, AssessmentResult result, ResultsViewModel viewModel) {
+  Widget _buildHistoryItem(
+    BuildContext context,
+    AssessmentResult result,
+    ResultsViewModel viewModel,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Dismissible(
       key: Key(result.id),
       direction: DismissDirection.endToStart,
@@ -223,11 +232,7 @@ class _HistoryScreenState extends State<HistoryScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.delete,
-              color: theme.colorScheme.onError,
-              size: 24,
-            ),
+            Icon(Icons.delete, color: theme.colorScheme.onError, size: 24),
             const SizedBox(height: 4),
             Text(
               'Delete',
@@ -275,9 +280,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                       }).toList(),
                     ),
                   ),
-                
+
                 const SizedBox(width: AppConstants.defaultPadding),
-                
+
                 // Result details
                 Expanded(
                   child: Column(
@@ -296,7 +301,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                         _formatDate(result.timestamp),
                         style: TextStyle(
                           fontSize: AppConstants.bodyTextSize,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -305,7 +312,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                         children: result.doshaPercentages.entries.map((entry) {
                           final color = AppTheme.getDoshaColor(entry.key);
                           return Padding(
-                            padding: const EdgeInsets.only(right: AppConstants.smallPadding),
+                            padding: const EdgeInsets.only(
+                              right: AppConstants.smallPadding,
+                            ),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 6,
@@ -330,7 +339,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                     ],
                   ),
                 ),
-                
+
                 // Arrow icon
                 Icon(
                   Icons.arrow_forward_ios,
@@ -347,14 +356,12 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   Widget _buildLoadingState(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: theme.colorScheme.primary,
-          ),
+          CircularProgressIndicator(color: theme.colorScheme.primary),
           const SizedBox(height: AppConstants.defaultPadding),
           Text(
             'Loading assessment history...',
@@ -370,18 +377,14 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   Widget _buildErrorState(BuildContext context, String error) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: theme.colorScheme.error,
-            ),
+            Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
             const SizedBox(height: AppConstants.defaultPadding),
             Text(
               'Failed to load history',
@@ -413,7 +416,7 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -457,7 +460,7 @@ class _HistoryScreenState extends State<HistoryScreen>
   String _formatDate(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inDays == 0) {
       return 'Today at ${_formatTime(dateTime)}';
     } else if (difference.inDays == 1) {
@@ -481,10 +484,10 @@ class _HistoryScreenState extends State<HistoryScreen>
     final now = DateTime.now();
     final thisMonth = DateTime(now.year, now.month);
     final nextMonth = DateTime(now.year, now.month + 1);
-    
+
     return viewModel.history.where((result) {
-      return result.timestamp.isAfter(thisMonth) && 
-             result.timestamp.isBefore(nextMonth);
+      return result.timestamp.isAfter(thisMonth) &&
+          result.timestamp.isBefore(nextMonth);
     }).length;
   }
 
@@ -514,9 +517,13 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  void _deleteResult(BuildContext context, AssessmentResult result, ResultsViewModel viewModel) {
+  void _deleteResult(
+    BuildContext context,
+    AssessmentResult result,
+    ResultsViewModel viewModel,
+  ) {
     viewModel.deleteResult(result.id);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${result.prakritiType.displayName} assessment deleted'),
@@ -525,9 +532,7 @@ class _HistoryScreenState extends State<HistoryScreen>
           onPressed: () {
             // Note: In a real app, you'd implement undo functionality
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Undo is not implemented yet'),
-              ),
+              const SnackBar(content: Text('Undo is not implemented yet')),
             );
           },
         ),
@@ -553,7 +558,7 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   void _showStatistics(BuildContext context) {
     final stats = context.resultsViewModel.getHistoryStatistics();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -565,12 +570,20 @@ class _HistoryScreenState extends State<HistoryScreen>
             children: [
               Text('Total Assessments: ${stats['totalAssessments']}'),
               const SizedBox(height: 8),
-              Text('Most Common Prakriti: ${(stats['mostCommonPrakriti'] as PrakritiType?)?.displayName ?? 'N/A'}'),
-              const SizedBox(height: 16),
-              const Text('Average Dosha Scores:', style: TextStyle(fontWeight: FontWeight.bold)),
-              ...(stats['averageDoshaScores'] as Map<DoshaType, double>).entries.map(
-                (entry) => Text('${entry.key.displayName}: ${entry.value.toStringAsFixed(1)}'),
+              Text(
+                'Most Common Prakriti: ${(stats['mostCommonPrakriti'] as PrakritiType?)?.displayName ?? 'N/A'}',
               ),
+              const SizedBox(height: 16),
+              const Text(
+                'Average Dosha Scores:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              ...(stats['averageDoshaScores'] as Map<DoshaType, double>).entries
+                  .map(
+                    (entry) => Text(
+                      '${entry.key.displayName}: ${entry.value.toStringAsFixed(1)}',
+                    ),
+                  ),
             ],
           ),
         ),

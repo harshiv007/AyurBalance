@@ -10,7 +10,7 @@ void main() {
 
     setUp(() {
       calculator = DoshaCalculator();
-      
+
       // Create test questions with options for each dosha
       testQuestions = [
         Question(
@@ -93,11 +93,7 @@ void main() {
 
     group('calculateDoshaScores', () {
       test('should calculate correct scores for single dosha answers', () {
-        final answers = {
-          'q1': 'q1_vata',
-          'q2': 'q2_vata',
-          'q3': 'q3_vata',
-        };
+        final answers = {'q1': 'q1_vata', 'q2': 'q2_vata', 'q3': 'q3_vata'};
 
         final scores = calculator.calculateDoshaScores(answers, testQuestions);
 
@@ -108,9 +104,9 @@ void main() {
 
       test('should calculate correct scores for mixed answers', () {
         final answers = {
-          'q1': 'q1_vata',   // 2 points to vata
-          'q2': 'q2_pitta',  // 1 point to pitta
-          'q3': 'q3_kapha',  // 1 point to kapha
+          'q1': 'q1_vata', // 2 points to vata
+          'q2': 'q2_pitta', // 1 point to pitta
+          'q3': 'q3_kapha', // 1 point to kapha
         };
 
         final scores = calculator.calculateDoshaScores(answers, testQuestions);
@@ -131,10 +127,7 @@ void main() {
       });
 
       test('should handle invalid option IDs gracefully', () {
-        final answers = {
-          'q1': 'invalid_option',
-          'q2': 'q2_pitta',
-        };
+        final answers = {'q1': 'invalid_option', 'q2': 'q2_pitta'};
 
         final scores = calculator.calculateDoshaScores(answers, testQuestions);
 
@@ -281,17 +274,22 @@ void main() {
 
     group('extractSelectedTraits', () {
       test('should extract traits correctly by category', () {
-        final answers = {
-          'q1': 'q1_vata',
-          'q2': 'q2_pitta',
-          'q3': 'q3_kapha',
-        };
+        final answers = {'q1': 'q1_vata', 'q2': 'q2_pitta', 'q3': 'q3_kapha'};
 
         final traits = calculator.extractSelectedTraits(answers, testQuestions);
 
-        expect(traits[QuestionCategory.physicalTraits], contains('Dry and rough'));
-        expect(traits[QuestionCategory.mentalEmotional], contains('Get angry and irritated'));
-        expect(traits[QuestionCategory.habitsPreferences], contains('Deep and long'));
+        expect(
+          traits[QuestionCategory.physicalTraits],
+          contains('Dry and rough'),
+        );
+        expect(
+          traits[QuestionCategory.mentalEmotional],
+          contains('Get angry and irritated'),
+        );
+        expect(
+          traits[QuestionCategory.habitsPreferences],
+          contains('Deep and long'),
+        );
         expect(traits[QuestionCategory.environmentalReactions], isEmpty);
       });
 
@@ -316,7 +314,10 @@ void main() {
         final traits = calculator.extractSelectedTraits(answers, testQuestions);
 
         expect(traits[QuestionCategory.physicalTraits], isEmpty);
-        expect(traits[QuestionCategory.mentalEmotional], contains('Get angry and irritated'));
+        expect(
+          traits[QuestionCategory.mentalEmotional],
+          contains('Get angry and irritated'),
+        );
         expect(traits[QuestionCategory.habitsPreferences], isEmpty);
         expect(traits[QuestionCategory.environmentalReactions], isEmpty);
       });
@@ -339,16 +340,22 @@ void main() {
           ),
         ];
 
-        final answers = {
-          'q1': 'q1_vata',
-          'q4': 'q4_vata',
-        };
+        final answers = {'q1': 'q1_vata', 'q4': 'q4_vata'};
 
-        final traits = calculator.extractSelectedTraits(answers, extendedQuestions);
+        final traits = calculator.extractSelectedTraits(
+          answers,
+          extendedQuestions,
+        );
 
         expect(traits[QuestionCategory.physicalTraits], hasLength(2));
-        expect(traits[QuestionCategory.physicalTraits], contains('Dry and rough'));
-        expect(traits[QuestionCategory.physicalTraits], contains('Thin and light'));
+        expect(
+          traits[QuestionCategory.physicalTraits],
+          contains('Dry and rough'),
+        );
+        expect(
+          traits[QuestionCategory.physicalTraits],
+          contains('Thin and light'),
+        );
       });
     });
   });

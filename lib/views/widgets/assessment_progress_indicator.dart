@@ -15,10 +15,12 @@ class AssessmentProgressIndicator extends StatefulWidget {
   });
 
   @override
-  State<AssessmentProgressIndicator> createState() => _AssessmentProgressIndicatorState();
+  State<AssessmentProgressIndicator> createState() =>
+      _AssessmentProgressIndicatorState();
 }
 
-class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicator>
+class _AssessmentProgressIndicatorState
+    extends State<AssessmentProgressIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _progressAnimation;
@@ -31,13 +33,13 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
       duration: AppConstants.mediumAnimationDuration,
       vsync: this,
     );
-    _progressAnimation = Tween<double>(
-      begin: 0.0,
-      end: widget.progress,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _progressAnimation = Tween<double>(begin: 0.0, end: widget.progress)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeInOut,
+          ),
+        );
     _animationController.forward();
   }
 
@@ -46,13 +48,13 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
     super.didUpdateWidget(oldWidget);
     if (oldWidget.progress != widget.progress) {
       _previousProgress = oldWidget.progress;
-      _progressAnimation = Tween<double>(
-        begin: _previousProgress,
-        end: widget.progress,
-      ).animate(CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ));
+      _progressAnimation =
+          Tween<double>(begin: _previousProgress, end: widget.progress).animate(
+            CurvedAnimation(
+              parent: _animationController,
+              curve: Curves.easeInOut,
+            ),
+          );
       _animationController.reset();
       _animationController.forward();
     }
@@ -67,7 +69,7 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
       child: Column(
@@ -95,9 +97,9 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
               ),
             ],
           ),
-          
+
           const SizedBox(height: AppConstants.smallPadding),
-          
+
           // Progress bar
           Container(
             height: 8,
@@ -119,7 +121,7 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
                         color: theme.colorScheme.surfaceContainerHighest,
                       ),
                     ),
-                    
+
                     // Progress fill with gradient
                     FractionallySizedBox(
                       widthFactor: _progressAnimation.value,
@@ -137,7 +139,9 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.3,
+                              ),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -145,7 +149,7 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
                         ),
                       ),
                     ),
-                    
+
                     // Animated shimmer effect
                     if (_progressAnimation.value > 0)
                       FractionallySizedBox(
@@ -172,9 +176,9 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
               },
             ),
           ),
-          
+
           const SizedBox(height: AppConstants.smallPadding),
-          
+
           // Category progress indicators (optional visual enhancement)
           _buildCategoryIndicators(context),
         ],
@@ -184,14 +188,16 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
 
   Widget _buildCategoryIndicators(BuildContext context) {
     final theme = Theme.of(context);
-    final questionsPerCategory = widget.totalQuestions ~/ 4; // Assuming 4 categories
-    final currentCategory = (widget.currentQuestion - 1) ~/ questionsPerCategory;
-    
+    final questionsPerCategory =
+        widget.totalQuestions ~/ 4; // Assuming 4 categories
+    final currentCategory =
+        (widget.currentQuestion - 1) ~/ questionsPerCategory;
+
     return Row(
       children: List.generate(4, (index) {
         final isCompleted = index < currentCategory;
         final isCurrent = index == currentCategory;
-        
+
         Color indicatorColor;
         if (isCompleted) {
           indicatorColor = theme.colorScheme.primary;
@@ -200,7 +206,7 @@ class _AssessmentProgressIndicatorState extends State<AssessmentProgressIndicato
         } else {
           indicatorColor = theme.colorScheme.surfaceContainerHighest;
         }
-        
+
         return Expanded(
           child: Container(
             margin: EdgeInsets.only(

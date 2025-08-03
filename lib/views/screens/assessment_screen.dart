@@ -15,7 +15,7 @@ class AssessmentScreen extends StatefulWidget {
   State<AssessmentScreen> createState() => _AssessmentScreenState();
 }
 
-class _AssessmentScreenState extends State<AssessmentScreen> 
+class _AssessmentScreenState extends State<AssessmentScreen>
     with ViewModelLifecycleMixin {
   bool _isInitialized = false;
 
@@ -44,7 +44,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AppBar(
       title: Text(
         'Assessment',
@@ -66,9 +66,11 @@ class _AssessmentScreenState extends State<AssessmentScreen>
             if (!_isInitialized || viewModel.questions.isEmpty) {
               return const SizedBox.shrink();
             }
-            
+
             return Padding(
-              padding: const EdgeInsets.only(right: AppConstants.defaultPadding),
+              padding: const EdgeInsets.only(
+                right: AppConstants.defaultPadding,
+              ),
               child: Center(
                 child: Text(
                   '${viewModel.answeredQuestionsCount}/${viewModel.questions.length}',
@@ -109,7 +111,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
               totalQuestions: viewModel.questions.length,
               progress: viewModel.progress,
             ),
-            
+
             // Question content
             Expanded(
               child: PageView.builder(
@@ -126,7 +128,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                 itemBuilder: (context, index) {
                   final question = viewModel.questions[index];
                   final selectedAnswer = viewModel.answers[question.id];
-                  
+
                   return SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppConstants.defaultPadding,
@@ -136,7 +138,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                       selectedOptionId: selectedAnswer,
                       onAnswerSelected: (optionId) {
                         viewModel.answerQuestion(question.id, optionId);
-                        
+
                         // Auto-advance to next question after a short delay
                         Future.delayed(const Duration(milliseconds: 300), () {
                           if (mounted && !viewModel.isLastQuestion) {
@@ -149,7 +151,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                 },
               ),
             ),
-            
+
             // Navigation buttons
             _buildNavigationButtons(context, viewModel),
           ],
@@ -158,9 +160,12 @@ class _AssessmentScreenState extends State<AssessmentScreen>
     );
   }
 
-  Widget _buildNavigationButtons(BuildContext context, AssessmentViewModel viewModel) {
+  Widget _buildNavigationButtons(
+    BuildContext context,
+    AssessmentViewModel viewModel,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
       decoration: BoxDecoration(
@@ -185,7 +190,9 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     side: BorderSide(color: theme.colorScheme.outline),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.borderRadius,
+                      ),
                     ),
                   ),
                   child: Row(
@@ -206,7 +213,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
               ),
               const SizedBox(width: AppConstants.defaultPadding),
             ],
-            
+
             // Next/Complete button
             Expanded(
               flex: viewModel.isFirstQuestion ? 1 : 1,
@@ -220,7 +227,9 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   elevation: 2,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.borderRadius,
+                    ),
                   ),
                 ),
                 child: Row(
@@ -235,7 +244,9 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                     ),
                     const SizedBox(width: AppConstants.smallPadding),
                     Icon(
-                      viewModel.isLastQuestion ? Icons.check : Icons.arrow_forward,
+                      viewModel.isLastQuestion
+                          ? Icons.check
+                          : Icons.arrow_forward,
                       size: 18,
                     ),
                   ],
@@ -250,14 +261,12 @@ class _AssessmentScreenState extends State<AssessmentScreen>
 
   Widget _buildLoadingState(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: theme.colorScheme.primary,
-          ),
+          CircularProgressIndicator(color: theme.colorScheme.primary),
           const SizedBox(height: AppConstants.defaultPadding),
           Text(
             'Loading assessment questions...',
@@ -273,18 +282,14 @@ class _AssessmentScreenState extends State<AssessmentScreen>
 
   Widget _buildErrorState(BuildContext context, String error) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: theme.colorScheme.error,
-            ),
+            Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
             const SizedBox(height: AppConstants.defaultPadding),
             Text(
               'Something went wrong',
@@ -316,7 +321,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
 
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -352,7 +357,10 @@ class _AssessmentScreenState extends State<AssessmentScreen>
     );
   }
 
-  void _handleNextOrComplete(BuildContext context, AssessmentViewModel viewModel) {
+  void _handleNextOrComplete(
+    BuildContext context,
+    AssessmentViewModel viewModel,
+  ) {
     if (viewModel.isLastQuestion) {
       _completeAssessment(context, viewModel);
     } else {
@@ -360,15 +368,16 @@ class _AssessmentScreenState extends State<AssessmentScreen>
     }
   }
 
-  Future<void> _completeAssessment(BuildContext context, AssessmentViewModel viewModel) async {
+  Future<void> _completeAssessment(
+    BuildContext context,
+    AssessmentViewModel viewModel,
+  ) async {
     try {
       // Show loading dialog
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
       // Complete the assessment
@@ -377,7 +386,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
       // Close loading dialog
       if (context.mounted) {
         Navigator.of(context).pop();
-        
+
         // Navigate to results screen
         NavigationService.replaceWithResults(result);
       }
@@ -385,7 +394,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
       // Close loading dialog
       if (context.mounted) {
         Navigator.of(context).pop();
-        
+
         // Show error dialog
         showDialog(
           context: context,

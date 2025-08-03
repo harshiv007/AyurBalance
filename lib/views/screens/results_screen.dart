@@ -12,18 +12,14 @@ import '../widgets/recommendation_card.dart';
 class ResultsScreen extends StatefulWidget {
   final AssessmentResult result;
 
-  const ResultsScreen({
-    super.key,
-    required this.result,
-  });
+  const ResultsScreen({super.key, required this.result});
 
   @override
   State<ResultsScreen> createState() => _ResultsScreenState();
 }
 
-class _ResultsScreenState extends State<ResultsScreen> 
+class _ResultsScreenState extends State<ResultsScreen>
     with ViewModelLifecycleMixin {
-
   @override
   void initializeViewModels() {
     context.resultsViewModel.setCurrentResult(widget.result);
@@ -31,15 +27,12 @@ class _ResultsScreenState extends State<ResultsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      body: _buildBody(context),
-    );
+    return Scaffold(appBar: _buildAppBar(context), body: _buildBody(context));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AppBar(
       title: Text(
         'Your Results',
@@ -73,27 +66,27 @@ class _ResultsScreenState extends State<ResultsScreen>
         children: [
           // Prakriti type display
           _buildPrakritiTypeCard(context),
-          
+
           const SizedBox(height: AppConstants.largePadding),
-          
+
           // Dosha score breakdown
           _buildDoshaScoreBreakdown(context),
-          
+
           const SizedBox(height: AppConstants.largePadding),
-          
+
           // Selected traits summary
           _buildSelectedTraits(context),
-          
+
           const SizedBox(height: AppConstants.largePadding),
-          
+
           // Recommendations section
           _buildRecommendationsSection(context),
-          
+
           const SizedBox(height: AppConstants.largePadding),
-          
+
           // Action buttons
           _buildActionButtons(context),
-          
+
           const SizedBox(height: AppConstants.defaultPadding),
         ],
       ),
@@ -103,7 +96,7 @@ class _ResultsScreenState extends State<ResultsScreen>
   Widget _buildPrakritiTypeCard(BuildContext context) {
     final theme = Theme.of(context);
     final result = widget.result;
-    
+
     return Card(
       elevation: AppConstants.cardElevation,
       child: Padding(
@@ -119,9 +112,9 @@ class _ResultsScreenState extends State<ResultsScreen>
                 color: theme.colorScheme.primary,
               ),
             ),
-            
+
             const SizedBox(height: AppConstants.smallPadding),
-            
+
             Text(
               'Your Ayurvedic constitution is',
               style: TextStyle(
@@ -129,9 +122,9 @@ class _ResultsScreenState extends State<ResultsScreen>
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
-            
+
             const SizedBox(height: AppConstants.defaultPadding),
-            
+
             // Prakriti type with avatar
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -145,19 +138,21 @@ class _ResultsScreenState extends State<ResultsScreen>
                   // Show multiple avatars for dual/tri-doshic types
                   Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: result.dominantDoshas.map((dosha) => 
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: DoshaAvatar(
-                          doshaType: dosha,
-                          size: DoshaAvatarSize.medium,
-                        ),
-                      ),
-                    ).toList(),
+                    children: result.dominantDoshas
+                        .map(
+                          (dosha) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: DoshaAvatar(
+                              doshaType: dosha,
+                              size: DoshaAvatarSize.medium,
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
-                
+
                 const SizedBox(width: AppConstants.defaultPadding),
-                
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -173,16 +168,18 @@ class _ResultsScreenState extends State<ResultsScreen>
                       'Constitution',
                       style: TextStyle(
                         fontSize: AppConstants.bodyTextSize,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            
+
             const SizedBox(height: AppConstants.defaultPadding),
-            
+
             // Description
             Container(
               padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -210,7 +207,7 @@ class _ResultsScreenState extends State<ResultsScreen>
     final theme = Theme.of(context);
     final result = widget.result;
     final percentages = result.doshaPercentages;
-    
+
     return Card(
       elevation: AppConstants.cardElevation,
       child: Padding(
@@ -226,16 +223,18 @@ class _ResultsScreenState extends State<ResultsScreen>
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            
+
             const SizedBox(height: AppConstants.defaultPadding),
-            
+
             ...DoshaType.values.map((doshaType) {
               final percentage = percentages[doshaType] ?? 0.0;
               final score = result.doshaScores[doshaType] ?? 0;
               final color = AppTheme.getDoshaColor(doshaType);
-              
+
               return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.defaultPadding),
+                padding: const EdgeInsets.only(
+                  bottom: AppConstants.defaultPadding,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -269,9 +268,9 @@ class _ResultsScreenState extends State<ResultsScreen>
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: AppConstants.smallPadding),
-                    
+
                     // Progress bar
                     Container(
                       height: 8,
@@ -303,7 +302,7 @@ class _ResultsScreenState extends State<ResultsScreen>
   Widget _buildSelectedTraits(BuildContext context) {
     final theme = Theme.of(context);
     final result = widget.result;
-    
+
     return Card(
       elevation: AppConstants.cardElevation,
       child: Padding(
@@ -319,17 +318,19 @@ class _ResultsScreenState extends State<ResultsScreen>
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            
+
             const SizedBox(height: AppConstants.defaultPadding),
-            
+
             ...result.selectedTraits.entries.map((entry) {
               final category = entry.key;
               final traits = entry.value;
-              
+
               if (traits.isEmpty) return const SizedBox.shrink();
-              
+
               return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.defaultPadding),
+                padding: const EdgeInsets.only(
+                  bottom: AppConstants.defaultPadding,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -341,32 +342,42 @@ class _ResultsScreenState extends State<ResultsScreen>
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    
+
                     const SizedBox(height: AppConstants.smallPadding),
-                    
+
                     Wrap(
                       spacing: AppConstants.smallPadding,
                       runSpacing: AppConstants.smallPadding,
-                      children: traits.map((trait) => Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppConstants.smallPadding,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainerLow,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-                          border: Border.all(
-                            color: theme.colorScheme.outline.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Text(
-                          trait,
-                          style: TextStyle(
-                            fontSize: AppConstants.captionTextSize,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                          ),
-                        ),
-                      )).toList(),
+                      children: traits
+                          .map(
+                            (trait) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppConstants.smallPadding,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surfaceContainerLow,
+                                borderRadius: BorderRadius.circular(
+                                  AppConstants.borderRadius,
+                                ),
+                                border: Border.all(
+                                  color: theme.colorScheme.outline.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                trait,
+                                style: TextStyle(
+                                  fontSize: AppConstants.captionTextSize,
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.8,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
                     ),
                   ],
                 ),
@@ -381,7 +392,7 @@ class _ResultsScreenState extends State<ResultsScreen>
   Widget _buildRecommendationsSection(BuildContext context) {
     final theme = Theme.of(context);
     final result = widget.result;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -393,9 +404,9 @@ class _ResultsScreenState extends State<ResultsScreen>
             color: theme.colorScheme.onSurface,
           ),
         ),
-        
+
         const SizedBox(height: AppConstants.defaultPadding),
-        
+
         Text(
           'Based on your ${result.prakritiType.displayName} constitution, here are tailored wellness recommendations:',
           style: TextStyle(
@@ -403,12 +414,12 @@ class _ResultsScreenState extends State<ResultsScreen>
             color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
           ),
         ),
-        
+
         const SizedBox(height: AppConstants.defaultPadding),
-        
+
         // Recommendation cards
-        ...result.recommendations.map((recommendation) => 
-          RecommendationCard(
+        ...result.recommendations.map(
+          (recommendation) => RecommendationCard(
             recommendation: recommendation,
             initiallyExpanded: false,
           ),
@@ -419,7 +430,7 @@ class _ResultsScreenState extends State<ResultsScreen>
 
   Widget _buildActionButtons(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       children: [
         // Save Results button (if not already saved)
@@ -445,9 +456,9 @@ class _ResultsScreenState extends State<ResultsScreen>
             ),
           ),
         ),
-        
+
         const SizedBox(height: AppConstants.defaultPadding),
-        
+
         // Retake Assessment button
         SizedBox(
           width: double.infinity,

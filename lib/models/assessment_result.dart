@@ -28,13 +28,9 @@ class AssessmentResult {
   Map<DoshaType, double> get doshaPercentages {
     final total = totalScore;
     if (total == 0) {
-      return {
-        DoshaType.vata: 0.0,
-        DoshaType.pitta: 0.0,
-        DoshaType.kapha: 0.0,
-      };
+      return {DoshaType.vata: 0.0, DoshaType.pitta: 0.0, DoshaType.kapha: 0.0};
     }
-    
+
     return doshaScores.map(
       (dosha, score) => MapEntry(dosha, (score / total) * 100),
     );
@@ -44,7 +40,7 @@ class AssessmentResult {
   List<DoshaType> get dominantDoshas {
     final sortedEntries = doshaScores.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     final highestScore = sortedEntries.first.value;
     return sortedEntries
         .where((entry) => entry.value == highestScore)
@@ -97,7 +93,10 @@ class AssessmentResult {
         ),
       ),
       recommendations: (json['recommendations'] as List<dynamic>)
-          .map((recJson) => Recommendation.fromJson(recJson as Map<String, dynamic>))
+          .map(
+            (recJson) =>
+                Recommendation.fromJson(recJson as Map<String, dynamic>),
+          )
           .toList(),
     );
   }
@@ -134,8 +133,11 @@ class AssessmentResult {
         other.prakritiType == prakritiType &&
         other.selectedTraits.length == selectedTraits.length &&
         other.selectedTraits.entries.every(
-          (entry) => selectedTraits[entry.key]?.length == entry.value.length &&
-              selectedTraits[entry.key]!.every((trait) => entry.value.contains(trait)),
+          (entry) =>
+              selectedTraits[entry.key]?.length == entry.value.length &&
+              selectedTraits[entry.key]!.every(
+                (trait) => entry.value.contains(trait),
+              ),
         ) &&
         other.recommendations.length == recommendations.length &&
         other.recommendations.every((rec) => recommendations.contains(rec));

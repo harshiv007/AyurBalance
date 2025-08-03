@@ -28,24 +28,20 @@ class _RecommendationCardState extends State<RecommendationCard>
   void initState() {
     super.initState();
     _isExpanded = widget.initiallyExpanded;
-    
+
     _animationController = AnimationController(
       duration: AppConstants.mediumAnimationDuration,
       vsync: this,
     );
-    
+
     _expandAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
     );
-    
-    _iconRotationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 0.5,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+
+    _iconRotationAnimation = Tween<double>(begin: 0.0, end: 0.5).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
     if (_isExpanded) {
       _animationController.value = 1.0;
@@ -72,7 +68,7 @@ class _RecommendationCardState extends State<RecommendationCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       elevation: AppConstants.cardElevation,
       margin: const EdgeInsets.symmetric(
@@ -97,7 +93,9 @@ class _RecommendationCardState extends State<RecommendationCard>
                       height: 48,
                       decoration: BoxDecoration(
                         color: _getRecommendationColor().withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.borderRadius,
+                        ),
                       ),
                       child: Icon(
                         _getRecommendationIcon(),
@@ -105,9 +103,9 @@ class _RecommendationCardState extends State<RecommendationCard>
                         size: 24,
                       ),
                     ),
-                    
+
                     const SizedBox(width: AppConstants.defaultPadding),
-                    
+
                     // Title and description
                     Expanded(
                       child: Column(
@@ -133,7 +131,7 @@ class _RecommendationCardState extends State<RecommendationCard>
                         ],
                       ),
                     ),
-                    
+
                     // Expand/collapse icon
                     AnimatedBuilder(
                       animation: _iconRotationAnimation,
@@ -142,7 +140,9 @@ class _RecommendationCardState extends State<RecommendationCard>
                           angle: _iconRotationAnimation.value * 3.14159,
                           child: Icon(
                             Icons.keyboard_arrow_down,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                             size: 24,
                           ),
                         );
@@ -153,7 +153,7 @@ class _RecommendationCardState extends State<RecommendationCard>
               ),
             ),
           ),
-          
+
           // Expandable content section
           SizeTransition(
             sizeFactor: _expandAnimation,
@@ -173,22 +173,24 @@ class _RecommendationCardState extends State<RecommendationCard>
                     color: theme.colorScheme.outline.withValues(alpha: 0.2),
                     height: 1,
                   ),
-                  
+
                   const SizedBox(height: AppConstants.defaultPadding),
-                  
+
                   // Description
                   if (widget.recommendation.description.isNotEmpty) ...[
                     Text(
                       widget.recommendation.description,
                       style: TextStyle(
                         fontSize: AppConstants.bodyTextSize,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.8,
+                        ),
                         height: 1.4,
                       ),
                     ),
                     const SizedBox(height: AppConstants.defaultPadding),
                   ],
-                  
+
                   // Suggestions list
                   if (widget.recommendation.suggestions.isNotEmpty) ...[
                     Text(
@@ -200,9 +202,9 @@ class _RecommendationCardState extends State<RecommendationCard>
                       ),
                     ),
                     const SizedBox(height: AppConstants.smallPadding),
-                    
-                    ...widget.recommendation.suggestions.map((suggestion) =>
-                      _buildSuggestionItem(context, suggestion),
+
+                    ...widget.recommendation.suggestions.map(
+                      (suggestion) => _buildSuggestionItem(context, suggestion),
                     ),
                   ],
                 ],
@@ -216,7 +218,7 @@ class _RecommendationCardState extends State<RecommendationCard>
 
   Widget _buildSuggestionItem(BuildContext context, String suggestion) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: AppConstants.smallPadding),
       child: Row(
@@ -226,13 +228,16 @@ class _RecommendationCardState extends State<RecommendationCard>
           Container(
             width: 6,
             height: 6,
-            margin: const EdgeInsets.only(top: 8, right: AppConstants.smallPadding),
+            margin: const EdgeInsets.only(
+              top: 8,
+              right: AppConstants.smallPadding,
+            ),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: _getRecommendationColor(),
             ),
           ),
-          
+
           // Suggestion text
           Expanded(
             child: Text(
@@ -298,12 +303,14 @@ class RecommendationsList extends StatelessWidget {
     if (allowMultipleExpanded) {
       // Allow multiple cards to be expanded simultaneously
       return Column(
-        children: recommendations.map((recommendation) =>
-          RecommendationCard(
-            recommendation: recommendation,
-            initiallyExpanded: false,
-          ),
-        ).toList(),
+        children: recommendations
+            .map(
+              (recommendation) => RecommendationCard(
+                recommendation: recommendation,
+                initiallyExpanded: false,
+              ),
+            )
+            .toList(),
       );
     } else {
       // Use ExpansionPanelList for single expansion behavior
@@ -318,9 +325,7 @@ class RecommendationsList extends StatelessWidget {
 class _SingleExpansionRecommendationsList extends StatefulWidget {
   final List<Recommendation> recommendations;
 
-  const _SingleExpansionRecommendationsList({
-    required this.recommendations,
-  });
+  const _SingleExpansionRecommendationsList({required this.recommendations});
 
   @override
   State<_SingleExpansionRecommendationsList> createState() =>
@@ -337,7 +342,7 @@ class _SingleExpansionRecommendationsListState
       children: widget.recommendations.asMap().entries.map((entry) {
         final index = entry.key;
         final recommendation = entry.value;
-        
+
         return RecommendationCard(
           recommendation: recommendation,
           initiallyExpanded: _expandedIndex == index,

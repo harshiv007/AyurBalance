@@ -15,17 +15,16 @@ class ResultsViewModel extends ChangeNotifier {
   String? _error;
 
   // Constructor
-  ResultsViewModel({
-    StorageService? storageService,
-  }) : _storageService = storageService ?? StorageService();
+  ResultsViewModel({StorageService? storageService})
+    : _storageService = storageService ?? StorageService();
 
   // Getters
   AssessmentResult? get currentResult => _currentResult;
-  
+
   List<AssessmentResult> get history => List.unmodifiable(_history);
-  
+
   bool get isLoading => _isLoading;
-  
+
   String? get error => _error;
 
   /// Check if there is a current result to display
@@ -46,12 +45,12 @@ class ResultsViewModel extends ChangeNotifier {
   /// Get results grouped by prakriti type
   Map<PrakritiType, List<AssessmentResult>> get resultsByPrakritiType {
     final Map<PrakritiType, List<AssessmentResult>> grouped = {};
-    
+
     for (final result in _history) {
       grouped.putIfAbsent(result.prakritiType, () => []);
       grouped[result.prakritiType]!.add(result);
     }
-    
+
     return grouped;
   }
 
@@ -74,11 +73,11 @@ class ResultsViewModel extends ChangeNotifier {
 
     try {
       final result = await _storageService.getAssessmentResult(resultId);
-      
+
       if (result == null) {
         throw Exception('Assessment result not found: $resultId');
       }
-      
+
       _currentResult = result;
       notifyListeners();
     } catch (e) {
@@ -110,15 +109,15 @@ class ResultsViewModel extends ChangeNotifier {
 
     try {
       await _storageService.deleteAssessmentResult(resultId);
-      
+
       // Remove from local history
       _history.removeWhere((result) => result.id == resultId);
-      
+
       // Clear current result if it was the deleted one
       if (_currentResult?.id == resultId) {
         _currentResult = null;
       }
-      
+
       notifyListeners();
     } catch (e) {
       _setError('Failed to delete assessment result: $e');
@@ -149,13 +148,15 @@ class ResultsViewModel extends ChangeNotifier {
     try {
       // Reload history
       _history = await _storageService.getAssessmentHistory();
-      
+
       // If there's a current result, reload it to get any updates
       if (_currentResult != null) {
-        final updatedResult = await _storageService.getAssessmentResult(_currentResult!.id);
+        final updatedResult = await _storageService.getAssessmentResult(
+          _currentResult!.id,
+        );
         _currentResult = updatedResult;
       }
-      
+
       notifyListeners();
     } catch (e) {
       _setError('Failed to refresh results: $e');
@@ -165,21 +166,29 @@ class ResultsViewModel extends ChangeNotifier {
   }
 
   /// Get results from a specific date range
-  List<AssessmentResult> getResultsInDateRange(DateTime startDate, DateTime endDate) {
+  List<AssessmentResult> getResultsInDateRange(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     return _history.where((result) {
-      return result.timestamp.isAfter(startDate) && result.timestamp.isBefore(endDate);
+      return result.timestamp.isAfter(startDate) &&
+          result.timestamp.isBefore(endDate);
     }).toList();
   }
 
   /// Get results from the last N days
   List<AssessmentResult> getRecentResults(int days) {
     final cutoffDate = DateTime.now().subtract(Duration(days: days));
-    return _history.where((result) => result.timestamp.isAfter(cutoffDate)).toList();
+    return _history
+        .where((result) => result.timestamp.isAfter(cutoffDate))
+        .toList();
   }
 
   /// Search results by prakriti type
   List<AssessmentResult> searchByPrakritiType(PrakritiType prakritiType) {
-    return _history.where((result) => result.prakritiType == prakritiType).toList();
+    return _history
+        .where((result) => result.prakritiType == prakritiType)
+        .toList();
   }
 
   /// Get statistics about assessment history
@@ -202,8 +211,9 @@ class ResultsViewModel extends ChangeNotifier {
     };
 
     for (final result in _history) {
-      prakritiCounts[result.prakritiType] = (prakritiCounts[result.prakritiType] ?? 0) + 1;
-      
+      prakritiCounts[result.prakritiType] =
+          (prakritiCounts[result.prakritiType] ?? 0) + 1;
+
       result.doshaScores.forEach((dosha, score) {
         doshaScoreTotals[dosha] = doshaScoreTotals[dosha]! + score;
       });
@@ -228,7 +238,8 @@ class ResultsViewModel extends ChangeNotifier {
     // Assessment frequency by month
     final assessmentFrequency = <String, int>{};
     for (final result in _history) {
-      final monthKey = '${result.timestamp.year}-${result.timestamp.month.toString().padLeft(2, '0')}';
+      final monthKey =
+          '${result.timestamp.year}-${result.timestamp.month.toString().padLeft(2, '0')}';
       assessmentFrequency[monthKey] = (assessmentFrequency[monthKey] ?? 0) + 1;
     }
 
@@ -242,14 +253,18 @@ class ResultsViewModel extends ChangeNotifier {
   }
 
   /// Compare two assessment results
-  Map<String, dynamic> compareResults(AssessmentResult result1, AssessmentResult result2) {
+  Map<String, dynamic> compareResults(
+    AssessmentResult result1,
+    AssessmentResult result2,
+  ) {
     final comparison = <String, dynamic>{};
-    
+
     // Compare prakriti types
-    comparison['prakritiChanged'] = result1.prakritiType != result2.prakritiType;
+    comparison['prakritiChanged'] =
+        result1.prakritiType != result2.prakritiType;
     comparison['oldPrakriti'] = result1.prakritiType;
     comparison['newPrakriti'] = result2.prakritiType;
-    
+
     // Compare dosha scores
     final doshaChanges = <DoshaType, int>{};
     for (final dosha in DoshaType.values) {
@@ -258,10 +273,12 @@ class ResultsViewModel extends ChangeNotifier {
       doshaChanges[dosha] = newScore - oldScore;
     }
     comparison['doshaChanges'] = doshaChanges;
-    
+
     // Time difference
-    comparison['timeDifference'] = result2.timestamp.difference(result1.timestamp);
-    
+    comparison['timeDifference'] = result2.timestamp.difference(
+      result1.timestamp,
+    );
+
     return comparison;
   }
 

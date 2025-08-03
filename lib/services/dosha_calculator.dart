@@ -5,7 +5,7 @@ import '../models/question.dart';
 /// based on assessment answers.
 class DoshaCalculator {
   /// Calculates dosha scores based on user answers to assessment questions.
-  /// 
+  ///
   /// Takes a map of question IDs to selected option IDs and returns
   /// the total score for each dosha type.
   Map<DoshaType, int> calculateDoshaScores(
@@ -30,7 +30,7 @@ class DoshaCalculator {
     for (final entry in answers.entries) {
       final selectedOption = optionLookup[entry.value];
       if (selectedOption != null) {
-        scores[selectedOption.primaryDosha] = 
+        scores[selectedOption.primaryDosha] =
             (scores[selectedOption.primaryDosha] ?? 0) + selectedOption.weight;
       }
     }
@@ -39,7 +39,7 @@ class DoshaCalculator {
   }
 
   /// Determines the prakriti type based on dosha scores.
-  /// 
+  ///
   /// Uses the following logic:
   /// - Tridoshic: All three doshas are within 30% of the highest score
   /// - Dual dosha: Two doshas are within 20% of each other and significantly higher than third
@@ -72,7 +72,7 @@ class DoshaCalculator {
   }
 
   /// Extracts selected traits from answers, organized by question category.
-  /// 
+  ///
   /// Maps user answers to the text of selected options, grouped by
   /// the category of questions they answered.
   Map<QuestionCategory, List<String>> extractSelectedTraits(
@@ -89,7 +89,7 @@ class DoshaCalculator {
     // Create lookup maps for questions and options
     final questionLookup = <String, Question>{};
     final optionLookup = <String, QuestionOption>{};
-    
+
     for (final question in questions) {
       questionLookup[question.id] = question;
       for (final option in question.options) {
@@ -101,10 +101,10 @@ class DoshaCalculator {
     for (final entry in answers.entries) {
       final questionId = entry.key;
       final selectedOptionId = entry.value;
-      
+
       final question = questionLookup[questionId];
       final selectedOption = optionLookup[selectedOptionId];
-      
+
       if (question != null && selectedOption != null) {
         traits[question.category]?.add(selectedOption.text);
       }
@@ -128,15 +128,18 @@ class DoshaCalculator {
   /// Determines the dual dosha prakriti type based on two dominant doshas
   PrakritiType _getDualDoshaType(DoshaType first, DoshaType second) {
     final doshaSet = {first, second};
-    
-    if (doshaSet.contains(DoshaType.vata) && doshaSet.contains(DoshaType.pitta)) {
+
+    if (doshaSet.contains(DoshaType.vata) &&
+        doshaSet.contains(DoshaType.pitta)) {
       return PrakritiType.vataPitta;
-    } else if (doshaSet.contains(DoshaType.pitta) && doshaSet.contains(DoshaType.kapha)) {
+    } else if (doshaSet.contains(DoshaType.pitta) &&
+        doshaSet.contains(DoshaType.kapha)) {
       return PrakritiType.pittaKapha;
-    } else if (doshaSet.contains(DoshaType.vata) && doshaSet.contains(DoshaType.kapha)) {
+    } else if (doshaSet.contains(DoshaType.vata) &&
+        doshaSet.contains(DoshaType.kapha)) {
       return PrakritiType.vataKapha;
     }
-    
+
     // Fallback to single dosha if combination not recognized
     return _getSingleDoshaType(first);
   }

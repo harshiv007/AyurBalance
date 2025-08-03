@@ -99,7 +99,10 @@ class Question {
         (e) => e.name == json['category'],
       ),
       options: (json['options'] as List<dynamic>)
-          .map((optionJson) => QuestionOption.fromJson(optionJson as Map<String, dynamic>))
+          .map(
+            (optionJson) =>
+                QuestionOption.fromJson(optionJson as Map<String, dynamic>),
+          )
           .toList(),
     );
   }

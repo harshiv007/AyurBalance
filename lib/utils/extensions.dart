@@ -137,28 +137,28 @@ extension RecommendationTypeExtensions on RecommendationType {
 extension BuildContextExtensions on BuildContext {
   /// Get theme data
   ThemeData get theme => Theme.of(this);
-  
+
   /// Get color scheme
   ColorScheme get colorScheme => theme.colorScheme;
-  
+
   /// Get text theme
   TextTheme get textTheme => theme.textTheme;
-  
+
   /// Get media query data
   MediaQueryData get mediaQuery => MediaQuery.of(this);
-  
+
   /// Get screen size
   Size get screenSize => mediaQuery.size;
-  
+
   /// Get screen width
   double get screenWidth => screenSize.width;
-  
+
   /// Get screen height
   double get screenHeight => screenSize.height;
-  
+
   /// Check if device is in dark mode
   bool get isDarkMode => theme.brightness == Brightness.dark;
-  
+
   /// Show snackbar with message
   void showSnackBar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(this).showSnackBar(

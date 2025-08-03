@@ -11,17 +11,16 @@ class ThemeViewModel extends ChangeNotifier {
   String? _error;
 
   // Constructor
-  ThemeViewModel({
-    StorageService? storageService,
-  }) : _storageService = storageService ?? StorageService();
+  ThemeViewModel({StorageService? storageService})
+    : _storageService = storageService ?? StorageService();
 
   // Getters
   bool get isDarkMode => _isDarkMode;
-  
+
   bool get isLightMode => !_isDarkMode;
-  
+
   bool get isLoading => _isLoading;
-  
+
   String? get error => _error;
 
   /// Get the current theme mode as a string
@@ -51,10 +50,10 @@ class ThemeViewModel extends ChangeNotifier {
 
     try {
       final newThemeMode = !_isDarkMode;
-      
+
       // Save to storage first
       await _storageService.saveThemePreference(newThemeMode);
-      
+
       // Update local state
       _isDarkMode = newThemeMode;
       notifyListeners();
@@ -66,7 +65,7 @@ class ThemeViewModel extends ChangeNotifier {
   /// Set theme to dark mode
   Future<void> setDarkMode() async {
     if (_isDarkMode) return; // Already in dark mode
-    
+
     _clearError();
 
     try {
@@ -81,7 +80,7 @@ class ThemeViewModel extends ChangeNotifier {
   /// Set theme to light mode
   Future<void> setLightMode() async {
     if (!_isDarkMode) return; // Already in light mode
-    
+
     _clearError();
 
     try {
@@ -96,7 +95,7 @@ class ThemeViewModel extends ChangeNotifier {
   /// Set theme mode directly
   Future<void> setThemeMode(bool isDarkMode) async {
     if (_isDarkMode == isDarkMode) return; // No change needed
-    
+
     _clearError();
 
     try {
@@ -117,14 +116,14 @@ class ThemeViewModel extends ChangeNotifier {
       // Try to load saved preference first
       final savedPreference = await _storageService.getThemePreference();
       _isDarkMode = savedPreference;
-      
+
       // If no saved preference and system preference is provided, use it
       if (savedPreference == false && systemDarkMode == true) {
         _isDarkMode = true;
         // Save the system preference for future use
         await _storageService.saveThemePreference(true);
       }
-      
+
       notifyListeners();
     } catch (e) {
       _setError('Failed to initialize theme: $e');

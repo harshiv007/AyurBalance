@@ -60,9 +60,7 @@ class Recommendation {
 
   factory Recommendation.fromJson(Map<String, dynamic> json) {
     return Recommendation(
-      type: RecommendationType.values.firstWhere(
-        (e) => e.name == json['type'],
-      ),
+      type: RecommendationType.values.firstWhere((e) => e.name == json['type']),
       title: json['title'] as String,
       description: json['description'] as String,
       suggestions: List<String>.from(json['suggestions'] as List),
@@ -77,7 +75,9 @@ class Recommendation {
         other.title == title &&
         other.description == description &&
         other.suggestions.length == suggestions.length &&
-        other.suggestions.every((suggestion) => suggestions.contains(suggestion));
+        other.suggestions.every(
+          (suggestion) => suggestions.contains(suggestion),
+        );
   }
 
   @override

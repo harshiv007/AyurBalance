@@ -35,7 +35,7 @@ class DoshaAvatar extends StatelessWidget {
     final theme = Theme.of(context);
     final doshaColor = AppTheme.getDoshaColor(doshaType);
     final doshaName = AppTheme.getDoshaName(doshaType);
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -46,10 +46,7 @@ class DoshaAvatar extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: RadialGradient(
-              colors: [
-                doshaColor.withValues(alpha: 0.8),
-                doshaColor,
-              ],
+              colors: [doshaColor.withValues(alpha: 0.8), doshaColor],
               stops: const [0.0, 1.0],
             ),
             boxShadow: showGlow
@@ -76,7 +73,7 @@ class DoshaAvatar extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Label (if enabled)
         if (showLabel) ...[
           const SizedBox(height: AppConstants.smallPadding),
@@ -138,7 +135,7 @@ class CombinedDoshaAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -150,7 +147,7 @@ class CombinedDoshaAvatar extends StatelessWidget {
             children: doshaTypes.asMap().entries.map((entry) {
               final index = entry.key;
               final doshaType = entry.value;
-              
+
               return Positioned(
                 left: index * (size.size * 0.3),
                 child: DoshaAvatar(
@@ -162,7 +159,7 @@ class CombinedDoshaAvatar extends StatelessWidget {
             }).toList(),
           ),
         ),
-        
+
         // Combination label
         if (combinationLabel != null) ...[
           const SizedBox(height: AppConstants.smallPadding),
@@ -176,7 +173,7 @@ class CombinedDoshaAvatar extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ],
-        
+
         // Individual labels (if enabled)
         if (showLabels && combinationLabel == null) ...[
           const SizedBox(height: AppConstants.smallPadding),
@@ -200,7 +197,9 @@ class CombinedDoshaAvatar extends StatelessWidget {
                       ' • ',
                       style: TextStyle(
                         fontSize: _getLabelFontSize(),
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                 ],
@@ -248,7 +247,7 @@ class DoshaScoreAvatar extends StatelessWidget {
     final doshaColor = AppTheme.getDoshaColor(doshaType);
     final doshaName = AppTheme.getDoshaName(doshaType);
     final percentage = maxScore > 0 ? (score / maxScore * 100).round() : 0;
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -267,17 +266,14 @@ class DoshaScoreAvatar extends StatelessWidget {
                 valueColor: AlwaysStoppedAnimation<Color>(doshaColor),
               ),
             ),
-            
+
             // Dosha avatar
-            DoshaAvatar(
-              doshaType: doshaType,
-              size: size,
-            ),
+            DoshaAvatar(doshaType: doshaType, size: size),
           ],
         ),
-        
+
         const SizedBox(height: AppConstants.smallPadding),
-        
+
         // Dosha name
         Text(
           doshaName,
@@ -287,7 +283,7 @@ class DoshaScoreAvatar extends StatelessWidget {
             color: theme.colorScheme.onSurface,
           ),
         ),
-        
+
         // Score and percentage
         Text(
           '$score ($percentage%)',

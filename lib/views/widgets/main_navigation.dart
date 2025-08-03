@@ -7,10 +7,7 @@ import '../screens/history_screen.dart';
 class MainNavigation extends StatefulWidget {
   final int initialIndex;
 
-  const MainNavigation({
-    super.key,
-    this.initialIndex = 0,
-  });
+  const MainNavigation({super.key, this.initialIndex = 0});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -20,10 +17,7 @@ class _MainNavigationState extends State<MainNavigation> {
   late int _currentIndex;
   late PageController _pageController;
 
-  final List<Widget> _screens = [
-    const WelcomeScreen(),
-    const HistoryScreen(),
-  ];
+  final List<Widget> _screens = [const WelcomeScreen(), const HistoryScreen()];
 
   final List<NavigationItem> _navigationItems = [
     NavigationItem(
@@ -77,7 +71,9 @@ class _MainNavigationState extends State<MainNavigation> {
           type: BottomNavigationBarType.fixed,
           backgroundColor: theme.colorScheme.surface,
           selectedItemColor: theme.colorScheme.primary,
-          unselectedItemColor: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          unselectedItemColor: theme.colorScheme.onSurface.withValues(
+            alpha: 0.6,
+          ),
           selectedLabelStyle: TextStyle(
             fontSize: AppConstants.captionTextSize,
             fontWeight: FontWeight.w600,
@@ -87,11 +83,15 @@ class _MainNavigationState extends State<MainNavigation> {
             fontWeight: FontWeight.w500,
           ),
           elevation: 0,
-          items: _navigationItems.map((item) => BottomNavigationBarItem(
-            icon: Icon(item.icon),
-            activeIcon: Icon(item.activeIcon),
-            label: item.label,
-          )).toList(),
+          items: _navigationItems
+              .map(
+                (item) => BottomNavigationBarItem(
+                  icon: Icon(item.icon),
+                  activeIcon: Icon(item.activeIcon),
+                  label: item.label,
+                ),
+              )
+              .toList(),
         ),
       ),
     );

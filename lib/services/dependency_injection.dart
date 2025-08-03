@@ -14,7 +14,9 @@ class DependencyInjection {
     // Create service instances
     final storageService = StorageService();
     final doshaCalculator = DoshaCalculator();
-    final assessmentService = AssessmentService(doshaCalculator: doshaCalculator);
+    final assessmentService = AssessmentService(
+      doshaCalculator: doshaCalculator,
+    );
 
     return [
       // Theme ViewModel
@@ -43,7 +45,9 @@ class DependencyInjection {
     // Create shared service instances
     final storageService = StorageService();
     final doshaCalculator = DoshaCalculator();
-    final assessmentService = AssessmentService(doshaCalculator: doshaCalculator);
+    final assessmentService = AssessmentService(
+      doshaCalculator: doshaCalculator,
+    );
 
     return [
       Provider<StorageService>.value(value: storageService),
@@ -58,37 +62,43 @@ class DependencyInjection {
       providers: [
         // Service providers (shared instances)
         ...createServiceProviders(),
-        
+
         // ViewModel providers (with proper dependencies)
         ChangeNotifierProxyProvider<StorageService, ThemeViewModel>(
           create: (context) => ThemeViewModel(
             storageService: Provider.of<StorageService>(context, listen: false),
           ),
-          update: (context, storageService, previous) => previous ?? ThemeViewModel(
-            storageService: storageService,
-          ),
+          update: (context, storageService, previous) =>
+              previous ?? ThemeViewModel(storageService: storageService),
           lazy: false,
         ),
 
-        ChangeNotifierProxyProvider2<AssessmentService, StorageService, AssessmentViewModel>(
+        ChangeNotifierProxyProvider2<
+          AssessmentService,
+          StorageService,
+          AssessmentViewModel
+        >(
           create: (context) => AssessmentViewModel(
-            assessmentService: Provider.of<AssessmentService>(context, listen: false),
+            assessmentService: Provider.of<AssessmentService>(
+              context,
+              listen: false,
+            ),
             storageService: Provider.of<StorageService>(context, listen: false),
           ),
-          update: (context, assessmentService, storageService, previous) => 
-            previous ?? AssessmentViewModel(
-              assessmentService: assessmentService,
-              storageService: storageService,
-            ),
+          update: (context, assessmentService, storageService, previous) =>
+              previous ??
+              AssessmentViewModel(
+                assessmentService: assessmentService,
+                storageService: storageService,
+              ),
         ),
 
         ChangeNotifierProxyProvider<StorageService, ResultsViewModel>(
           create: (context) => ResultsViewModel(
             storageService: Provider.of<StorageService>(context, listen: false),
           ),
-          update: (context, storageService, previous) => previous ?? ResultsViewModel(
-            storageService: storageService,
-          ),
+          update: (context, storageService, previous) =>
+              previous ?? ResultsViewModel(storageService: storageService),
         ),
       ],
       child: child,
@@ -99,28 +109,27 @@ class DependencyInjection {
 /// Extension methods for easier ViewModel access
 extension ViewModelExtensions on BuildContext {
   /// Get AssessmentViewModel
-  AssessmentViewModel get assessmentViewModel => 
+  AssessmentViewModel get assessmentViewModel =>
       Provider.of<AssessmentViewModel>(this, listen: false);
 
   /// Get ResultsViewModel
-  ResultsViewModel get resultsViewModel => 
+  ResultsViewModel get resultsViewModel =>
       Provider.of<ResultsViewModel>(this, listen: false);
 
   /// Get ThemeViewModel
-  ThemeViewModel get themeViewModel => 
+  ThemeViewModel get themeViewModel =>
       Provider.of<ThemeViewModel>(this, listen: false);
 
   /// Watch AssessmentViewModel
-  AssessmentViewModel watchAssessmentViewModel() => 
+  AssessmentViewModel watchAssessmentViewModel() =>
       Provider.of<AssessmentViewModel>(this);
 
   /// Watch ResultsViewModel
-  ResultsViewModel watchResultsViewModel() => 
+  ResultsViewModel watchResultsViewModel() =>
       Provider.of<ResultsViewModel>(this);
 
   /// Watch ThemeViewModel
-  ThemeViewModel watchThemeViewModel() => 
-      Provider.of<ThemeViewModel>(this);
+  ThemeViewModel watchThemeViewModel() => Provider.of<ThemeViewModel>(this);
 }
 
 /// Mixin for widgets that need ViewModel lifecycle management
