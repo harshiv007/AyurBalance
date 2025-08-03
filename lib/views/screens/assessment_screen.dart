@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/assessment_viewmodel.dart';
+import '../../services/navigation_service.dart';
+import '../../services/dependency_injection.dart';
 import '../../utils/constants.dart';
 import '../widgets/question_card.dart';
 import '../widgets/assessment_progress_indicator.dart';
-import 'results_screen.dart';
 
 /// Screen for conducting the Ayurvedic prakriti assessment
 class AssessmentScreen extends StatefulWidget {
@@ -14,21 +15,18 @@ class AssessmentScreen extends StatefulWidget {
   State<AssessmentScreen> createState() => _AssessmentScreenState();
 }
 
-class _AssessmentScreenState extends State<AssessmentScreen> {
-  late AssessmentViewModel _viewModel;
+class _AssessmentScreenState extends State<AssessmentScreen> 
+    with ViewModelLifecycleMixin {
   bool _isInitialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initializeAssessment();
-    });
+  void initializeViewModels() {
+    _initializeAssessment();
   }
 
   Future<void> _initializeAssessment() async {
-    _viewModel = Provider.of<AssessmentViewModel>(context, listen: false);
-    await _viewModel.loadQuestions();
+    final viewModel = context.assessmentViewModel;
+    await viewModel.loadQuestions();
     if (mounted) {
       setState(() {
         _isInitialized = true;
@@ -381,11 +379,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
         Navigator.of(context).pop();
         
         // Navigate to results screen
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => ResultsScreen(result: result),
-          ),
-        );
+        NavigationService.replaceWithResults(result);
       }
     } catch (e) {
       // Close loading dialog
@@ -412,7 +406,8 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
 
   void _handleBackPress(BuildContext context) {
     // Show confirmation dialog if assessment is in progress
-    if (_isInitialized && _viewModel.answeredQuestionsCount > 0) {
+    final viewModel = context.assessmentViewModel;
+    if (_isInitialized && viewModel.answeredQuestionsCount > 0) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

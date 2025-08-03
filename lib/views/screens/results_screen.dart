@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../models/assessment_result.dart';
 import '../../models/dosha.dart';
-import '../../viewmodels/results_viewmodel.dart';
+import '../../services/navigation_service.dart';
+import '../../services/dependency_injection.dart';
 import '../../utils/constants.dart';
 import '../../utils/theme.dart';
 import '../widgets/dosha_avatar.dart';
 import '../widgets/recommendation_card.dart';
-import 'welcome_screen.dart';
-import 'history_screen.dart';
 
 /// Screen that displays assessment results with prakriti analysis and recommendations
 class ResultsScreen extends StatefulWidget {
@@ -23,16 +21,12 @@ class ResultsScreen extends StatefulWidget {
   State<ResultsScreen> createState() => _ResultsScreenState();
 }
 
-class _ResultsScreenState extends State<ResultsScreen> {
-  late ResultsViewModel _viewModel;
+class _ResultsScreenState extends State<ResultsScreen> 
+    with ViewModelLifecycleMixin {
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _viewModel = Provider.of<ResultsViewModel>(context, listen: false);
-      _viewModel.setCurrentResult(widget.result);
-    });
+  void initializeViewModels() {
+    context.resultsViewModel.setCurrentResult(widget.result);
   }
 
   @override
@@ -518,15 +512,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
   }
 
   void _navigateToWelcome(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-      (route) => false,
-    );
+    NavigationService.navigateToWelcome();
   }
 
   void _navigateToHistory(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const HistoryScreen()),
-    );
+    NavigationService.navigateToHistory();
   }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/theme_viewmodel.dart';
+import '../../services/navigation_service.dart';
+import '../../services/dependency_injection.dart';
 import '../../utils/constants.dart';
 import '../../utils/theme.dart';
 import '../../models/dosha.dart';
 import '../widgets/dosha_avatar.dart';
-import 'assessment_screen.dart';
 
 /// Welcome screen that introduces the app and Ayurvedic prakriti concept
 class WelcomeScreen extends StatelessWidget {
@@ -80,7 +81,7 @@ class WelcomeScreen extends StatelessWidget {
         Consumer<ThemeViewModel>(
           builder: (context, themeViewModel, child) {
             return IconButton(
-              onPressed: () => themeViewModel.toggleTheme(),
+              onPressed: () => context.themeViewModel.toggleTheme(),
               icon: Icon(
                 themeViewModel.isDarkMode 
                     ? Icons.light_mode 
@@ -344,10 +345,6 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   void _navigateToAssessment(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const AssessmentScreen(),
-      ),
-    );
+    NavigationService.navigateToAssessment();
   }
 }

@@ -8,7 +8,12 @@ import 'dosha_calculator.dart';
 /// Service responsible for managing assessment questions, calculating results,
 /// and generating personalized recommendations based on Ayurvedic principles.
 class AssessmentService {
-  final DoshaCalculator _doshaCalculator = DoshaCalculator();
+  final DoshaCalculator _doshaCalculator;
+
+  /// Constructor with dependency injection
+  AssessmentService({
+    DoshaCalculator? doshaCalculator,
+  }) : _doshaCalculator = doshaCalculator ?? DoshaCalculator();
 
   /// Returns the complete list of assessment questions covering all four categories.
   List<Question> getQuestions() {

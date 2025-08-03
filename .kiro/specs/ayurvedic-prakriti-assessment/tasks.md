@@ -158,7 +158,7 @@
     - Implement smooth expand/collapse animations
     - _Requirements: 7.5, 8.1_
 
-- [ ] 7. Implement main application screens
+- [x] 7. Implement main application screens
 
 
 
@@ -205,15 +205,22 @@
     - Implement swipe-to-delete for result management
     - _Requirements: 9.2, 9.3_
 
-- [ ] 8. Set up navigation and app structure
-  - [ ] 8.1 Configure app routing and navigation
+- [x] 8. Set up navigation and app structure
+
+
+
+  - [x] 8.1 Configure app routing and navigation
+
+
     - Set up named routes for all screens
     - Implement navigation flow: Welcome → Assessment → Results → History
     - Add bottom navigation or drawer for screen switching
     - Handle back button behavior appropriately
     - _Requirements: 1.1, 1.5_
 
-  - [ ] 8.2 Integrate ViewModels with dependency injection
+
+  - [x] 8.2 Integrate ViewModels with dependency injection
+
     - Set up Provider or similar for ViewModel injection
     - Configure ChangeNotifierProvider for each ViewModel
     - Ensure proper ViewModel lifecycle management

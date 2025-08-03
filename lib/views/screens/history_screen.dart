@@ -3,10 +3,11 @@ import 'package:provider/provider.dart';
 import '../../models/assessment_result.dart';
 import '../../models/dosha.dart';
 import '../../viewmodels/results_viewmodel.dart';
+import '../../services/navigation_service.dart';
+import '../../services/dependency_injection.dart';
 import '../../utils/constants.dart';
 import '../../utils/theme.dart';
 import '../widgets/dosha_avatar.dart';
-import 'results_screen.dart';
 
 /// Screen that displays the history of saved assessment results
 class HistoryScreen extends StatefulWidget {
@@ -16,21 +17,18 @@ class HistoryScreen extends StatefulWidget {
   State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
-  late ResultsViewModel _viewModel;
+class _HistoryScreenState extends State<HistoryScreen> 
+    with ViewModelLifecycleMixin {
   bool _isInitialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initializeHistory();
-    });
+  void initializeViewModels() {
+    _initializeHistory();
   }
 
   Future<void> _initializeHistory() async {
-    _viewModel = Provider.of<ResultsViewModel>(context, listen: false);
-    await _viewModel.loadHistory();
+    final viewModel = context.resultsViewModel;
+    await viewModel.loadHistory();
     if (mounted) {
       setState(() {
         _isInitialized = true;
@@ -538,17 +536,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _viewResult(BuildContext context, AssessmentResult result) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ResultsScreen(result: result),
-      ),
-    );
+    NavigationService.navigateToResults(result);
   }
 
   void _handleMenuAction(BuildContext context, String action) {
+    final viewModel = context.resultsViewModel;
     switch (action) {
       case 'refresh':
-        _viewModel.refresh();
+        viewModel.refresh();
         break;
       case 'statistics':
         _showStatistics(context);
@@ -557,7 +552,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _showStatistics(BuildContext context) {
-    final stats = _viewModel.getHistoryStatistics();
+    final stats = context.resultsViewModel.getHistoryStatistics();
     
     showDialog(
       context: context,
