@@ -248,7 +248,7 @@
     - Persist theme preference using StorageService
     - _Requirements: 8.2_
 
-- [-] 10. Add error handling and user feedback
+- [ ] 10. Add error handling and user feedback
 
 
 
