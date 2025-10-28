@@ -16,6 +16,7 @@ Beginner-friendly Flutter structure
 git clone https://github.com/harshiv007/AyurBalance.git
 2.Enter project folder
 cd AyurBalance
+
 3.Install dependencies
 flutter pub get
 4.Run the app
